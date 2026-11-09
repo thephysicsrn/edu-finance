@@ -6,6 +6,7 @@ import { LandingFooter } from "@/components/landing/landing-footer";
 import { HeroInteractiveMesh } from "@/components/landing/hero-interactive-mesh";
 import { HeroMockup3D } from "@/components/landing/hero-mockup-3d";
 import { RoleProfilesShowcase } from "@/components/landing/role-profiles-showcase";
+import { OperationalJourneyShowcase } from "@/components/landing/operational-journey-showcase";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -149,148 +150,22 @@ export default async function LandingPage() {
         </section>
 
         {/* ============================================================== */}
-        {/* 4. SEÇÃO "SERVIÇOS" / MÓDULOS INTEGRADOS (IDÊNTICA À REFERÊNCIA) */}
+        {/* 4. SEÇÃO "SERVIÇOS" / JORNADA OPERACIONAL INTEGRADA           */}
         {/* ============================================================== */}
         <section id="modulos" className="py-24 sm:py-32 bg-white select-none">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Header da Seção de Serviços */}
-            <div className="text-center max-w-2xl mx-auto mb-16">
+            {/* Header da Seção */}
+            <div className="text-center max-w-3xl mx-auto mb-14">
               <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#07132c] uppercase text-balance">
-                Módulos & Recursos
+                Módulos & Jornada Operacional
               </h2>
-              <p className="mt-3 text-slate-500 text-sm sm:text-base">
-                Conheça nosso portfólio completo de soluções integradas para escolas e cursinhos
+              <p className="mt-3 text-slate-500 text-sm sm:text-base text-balance">
+                Veja como o Edu.Finance conecta a matrícula, a automação Asaas, a chamada em sala e o DRE em uma esteira 100% contínua e sem atritos.
               </p>
             </div>
 
-            {/* Grid dos 6 Módulos (com estrutura similar à da referência) */}
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {/* Módulo 1 */}
-              <div className="p-6 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-[#0052ff] hover:shadow-xl transition-all duration-200 group flex flex-col justify-between">
-                <div>
-                  <div className="h-12 w-12 rounded-xl bg-blue-50 text-[#0052ff] flex items-center justify-center mb-4 group-hover:bg-[#0052ff] group-hover:text-white transition-colors">
-                    <Receipt className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0052ff] transition-colors">
-                    Régua de Cobrança Asaas
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                    Emissão e envio automático de boletos registrados e QR Code PIX com liquidação imediata e baixa sem arquivos CNAB manuais.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-200/60">
-                  <Link href="/login" className="text-xs font-semibold text-[#0052ff] hover:underline flex items-center gap-1">
-                    <span>Acessar demonstração</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Módulo 2 */}
-              <div className="p-6 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-[#0052ff] hover:shadow-xl transition-all duration-200 group flex flex-col justify-between">
-                <div>
-                  <div className="h-12 w-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    <UserPlus className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0052ff] transition-colors">
-                    Matrícula Ágil & Contratos
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                    Cadastro unificado do aluno e responsável legal, aplicação de descontos por bolsa e geração atômica de todas as parcelas do ano letivo.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-200/60">
-                  <Link href="/login" className="text-xs font-semibold text-[#0052ff] hover:underline flex items-center gap-1">
-                    <span>Acessar demonstração</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Módulo 3 */}
-              <div className="p-6 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-[#0052ff] hover:shadow-xl transition-all duration-200 group flex flex-col justify-between">
-                <div>
-                  <div className="h-12 w-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                    <CalendarCheck className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0052ff] transition-colors">
-                    Diário de Frequência & Aulas
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                    Portal exclusivo para professores lançarem chamadas, faltas justificadas e diário de conteúdo por frente pedagógica sem ver dados financeiros.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-200/60">
-                  <Link href="/login" className="text-xs font-semibold text-[#0052ff] hover:underline flex items-center gap-1">
-                    <span>Acessar demonstração</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Módulo 4 */}
-              <div className="p-6 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-[#0052ff] hover:shadow-xl transition-all duration-200 group flex flex-col justify-between">
-                <div>
-                  <div className="h-12 w-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-                    <CreditCard className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0052ff] transition-colors">
-                    Frente de Caixa & Smart POS
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                    Baixa de mensalidades diretamente no balcão da secretaria com dinheiro, PIX ou maquininha de cartão, emitindo recibos na hora.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-200/60">
-                  <Link href="/login" className="text-xs font-semibold text-[#0052ff] hover:underline flex items-center gap-1">
-                    <span>Acessar demonstração</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Módulo 5 */}
-              <div className="p-6 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-[#0052ff] hover:shadow-xl transition-all duration-200 group flex flex-col justify-between">
-                <div>
-                  <div className="h-12 w-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                    <School className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0052ff] transition-colors">
-                    Lotação de Turmas & Salas
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                    Monitore em tempo real a taxa de ocupação das salas por turno (manhã e noite) e saiba exatamente quantas vagas restam para venda.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-200/60">
-                  <Link href="/login" className="text-xs font-semibold text-[#0052ff] hover:underline flex items-center gap-1">
-                    <span>Acessar demonstração</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-
-              {/* Módulo 6 */}
-              <div className="p-6 rounded-2xl border border-slate-200/90 bg-slate-50/50 hover:bg-white hover:border-[#0052ff] hover:shadow-xl transition-all duration-200 group flex flex-col justify-between">
-                <div>
-                  <div className="h-12 w-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    <TrendingUp className="h-6 w-6" />
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#0052ff] transition-colors">
-                    Relatório DRE & Fluxo de Caixa
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
-                    Visão consolidada de receita prevista vs. realizada, projeção de entradas futuras e histórico completo para auditoria e tomada de decisões.
-                  </p>
-                </div>
-                <div className="mt-6 pt-4 border-t border-slate-200/60">
-                  <Link href="/login" className="text-xs font-semibold text-[#0052ff] hover:underline flex items-center gap-1">
-                    <span>Acessar demonstração</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </Link>
-                </div>
-              </div>
-            </div>
+            {/* Showcase Interativo da Jornada Operacional */}
+            <OperationalJourneyShowcase />
           </div>
         </section>
 
