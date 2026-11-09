@@ -1,0 +1,16 @@
+{
+  "apphosting": {
+    "backendId": "sistema-call",
+    "rootDir": "/",
+    "ignore": [
+      "node_modules",
+      ".next",
+      ".git",
+      ".agents",
+      ".env*.local",
+      "Dockerfile*",
+      "firebase-debug.log",
+      "firebase-debug.*.log"
+    ]
+  }
+}
