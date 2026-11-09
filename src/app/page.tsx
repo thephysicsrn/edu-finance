@@ -26,6 +26,7 @@ export const dynamic = "force-dynamic";
 export default async function LandingPage() {
   const session = await auth();
   const user = session?.user;
+  const destinationHref = user ? "/dashboard" : "/login";
 
   return (
     <div className="min-h-screen bg-white flex flex-col selection:bg-[#0052ff] selection:text-white font-sans text-slate-900">

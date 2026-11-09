@@ -12,11 +12,15 @@ import { formatCurrency } from "@/lib/utils";
 
 export function HeroMockup3D() {
   const [scrollY, setScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    let ticking = false;
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
 
+    let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -28,12 +32,15 @@ export function HeroMockup3D() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
-  // Parallax suave com limites seguros
-  const scrollOffset = Math.min(scrollY * 0.12, 45);
-  const tiltX = Math.max(0, 10 - scrollY * 0.02);
+  // Parallax suave com limites seguros e desativação em mobile
+  const scrollOffset = isMobile ? 0 : Math.min(scrollY * 0.1, 40);
+  const tiltX = isMobile ? 0 : Math.max(0, 7 - scrollY * 0.015);
 
   return (
     <div

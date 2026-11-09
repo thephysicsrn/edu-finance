@@ -124,39 +124,47 @@ export function LandingHeader({ user }: LandingHeaderProps) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff]"
+              className="p-2.5 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff]"
               aria-label="Alternar Menu de Navegação"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Menu Dropdown Mobile */}
+        {/* Menu Dropdown Mobile com Backdrop */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-xl">
-            <div className="space-y-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-[#0052ff] transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </div>
+          <>
+            <div
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-30 lg:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-hidden="true"
+            />
+            <div className="relative z-40 lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-2xl">
+              <div className="space-y-1">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-[#0052ff] transition-colors"
+                  >
+                    {link.name}
+                  </a>
+                ))}
+              </div>
 
-            <div className="pt-3 border-t border-slate-100 space-y-2">
-              <Link href={destinationHref} onClick={() => setMobileMenuOpen(false)} className="block">
-                <Button className="w-full bg-[#0052ff] hover:bg-[#0041cc] text-white font-semibold justify-center gap-2 h-11">
-                  <User className="h-4 w-4" />
-                  <span>Área do Cliente & Login</span>
-                </Button>
-              </Link>
+              <div className="pt-3 border-t border-slate-100 space-y-2">
+                <Link href={destinationHref} onClick={() => setMobileMenuOpen(false)} className="block">
+                  <Button className="w-full bg-[#0052ff] hover:bg-[#0041cc] text-white font-semibold justify-center gap-2 h-11 text-xs uppercase tracking-wider">
+                    <User className="h-4 w-4" />
+                    <span>Área do Cliente & Login</span>
+                  </Button>
+                </Link>
+              </div>
             </div>
-          </div>
+          </>
         )}
       </nav>
     </header>

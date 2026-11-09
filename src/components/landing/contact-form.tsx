@@ -15,6 +15,18 @@ export function ContactFormSection() {
     message: "",
   });
 
+  function handlePhoneChange(val: string) {
+    const raw = val.replace(/\D/g, "").slice(0, 11);
+    let formatted = raw;
+    if (raw.length > 2) {
+      formatted = `(${raw.slice(0, 2)}) ${raw.slice(2)}`;
+    }
+    if (raw.length > 7) {
+      formatted = `(${raw.slice(0, 2)}) ${raw.slice(2, 7)}-${raw.slice(7)}`;
+    }
+    setFormData((prev) => ({ ...prev, phone: formatted }));
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -98,8 +110,8 @@ export function ContactFormSection() {
                       type="tel"
                       required
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="(11) 98765-4321"
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      placeholder="(84) 98122-0173"
                       className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-400 transition-colors"
                     />
                   </div>
