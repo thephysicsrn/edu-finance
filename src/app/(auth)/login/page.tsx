@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Eye,
   EyeOff,
@@ -41,13 +41,44 @@ const DEMO_PROFILES = [
   },
 ];
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const roleParam = searchParams.get("role")?.toLowerCase();
+
   const [email, setEmail] = useState("admin@edufinance.com.br");
   const [password, setPassword] = useState("admin123");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!roleParam) return;
+    if (roleParam === "admin" || roleParam === "direcao" || roleParam === "diretoria") {
+      setEmail("admin@edufinance.com.br");
+      setPassword("admin123");
+      setError(null);
+    } else if (
+      roleParam === "secretaria" ||
+      roleParam === "secretary" ||
+      roleParam === "atendimento" ||
+      roleParam === "financeiro" ||
+      roleParam === "cobranca"
+    ) {
+      setEmail("secretaria@cursinhopro.com.br");
+      setPassword("secretaria123");
+      setError(null);
+    } else if (
+      roleParam === "professor" ||
+      roleParam === "teacher" ||
+      roleParam === "docente" ||
+      roleParam === "pedagogico"
+    ) {
+      setEmail("professor@cursinhopro.com.br");
+      setPassword("prof123");
+      setError(null);
+    }
+  }, [roleParam]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -587,5 +618,19 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-[#0052ff]" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

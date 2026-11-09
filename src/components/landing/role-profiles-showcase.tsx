@@ -53,8 +53,8 @@ const ROLES: RoleCardData[] = [
       "Gestão Completa de Turmas e Cursos",
       "Auditoria de Recebíveis e Extrato Bancário",
     ],
-    ctaLabel: "Testar Visão de Direção",
-    href: "/login",
+    ctaLabel: "Acessar Demonstração (Admin)",
+    href: "/login?role=admin",
   },
   {
     id: "secretaria",
@@ -77,8 +77,8 @@ const ROLES: RoleCardData[] = [
       "WhatsApp direto com pais em atraso",
       "Controle de Vagas por Sala e Turno",
     ],
-    ctaLabel: "Testar Balcão da Secretaria",
-    href: "/login",
+    ctaLabel: "Acessar Demonstração (Secretaria)",
+    href: "/login?role=secretary",
   },
   {
     id: "professor",
@@ -101,8 +101,8 @@ const ROLES: RoleCardData[] = [
       "Zero burocracia ou dados de faturas",
       "Diário de Conteúdo e Frequência Ágil",
     ],
-    ctaLabel: "Testar Diário do Professor",
-    href: "/login",
+    ctaLabel: "Acessar Demonstração (Professor)",
+    href: "/login?role=teacher",
   },
 ];
 

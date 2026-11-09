@@ -89,8 +89,8 @@ const STEPS: JourneyStep[] = [
       ],
       footerNote: "Carnê PDF e termo de aceite despachados no WhatsApp do responsável automaticamente.",
     },
-    ctaLabel: "Testar Fluxo de Matrícula",
-    destinationHref: "/academic/students",
+    ctaLabel: "Acessar Demonstração (Secretaria)",
+    destinationHref: "/login?role=secretary",
   },
   {
     id: 2,
@@ -134,8 +134,8 @@ const STEPS: JourneyStep[] = [
       ],
       footerNote: "Zero arquivos de remessa ou retorno manual (.REM/.RET). O banco notifica e o sistema dá baixa sozinho.",
     },
-    ctaLabel: "Testar Régua de Cobrança",
-    destinationHref: "/financial/invoices",
+    ctaLabel: "Acessar Demonstração (Cobrança)",
+    destinationHref: "/login?role=secretary",
   },
   {
     id: 3,
@@ -179,8 +179,8 @@ const STEPS: JourneyStep[] = [
       ],
       footerNote: "Ambiente 100% focado no aprendizado. Professores nunca têm acesso a mensalidades ou contratos.",
     },
-    ctaLabel: "Testar Portal do Professor",
-    destinationHref: "/academic/attendance",
+    ctaLabel: "Acessar Demonstração (Professor)",
+    destinationHref: "/login?role=teacher",
   },
   {
     id: 4,
@@ -224,8 +224,8 @@ const STEPS: JourneyStep[] = [
       ],
       footerNote: "Auditoria contábil completa: saiba exatamente quanto vai entrar no caixa em cada dia do mês.",
     },
-    ctaLabel: "Testar Painel Executivo",
-    destinationHref: "/financial/cash-flow",
+    ctaLabel: "Acessar Demonstração (Diretoria)",
+    destinationHref: "/login?role=admin",
   },
 ];
 
@@ -455,3 +455,4 @@ export function OperationalJourneyShowcase() {
     </div>
   );
 }
+

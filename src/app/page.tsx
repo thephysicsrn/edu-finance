@@ -213,9 +213,9 @@ export default async function LandingPage() {
                 </div>
 
                 <div className="mt-8 flex items-center gap-4">
-                  <Link href="/login">
+                  <Link href="/login?role=admin">
                     <Button className="bg-[#00c878] hover:bg-[#00b069] active:bg-[#009b5c] text-white font-bold px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider focus-visible:ring-2 focus-visible:ring-[#00c878] focus-visible:ring-offset-2 focus-visible:ring-offset-[#07132c]">
-                      Testar Gateway na Prática
+                      Acessar Demonstração do Gateway
                     </Button>
                   </Link>
                 </div>
