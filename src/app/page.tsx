@@ -79,16 +79,16 @@ export default async function LandingPage() {
 
               {/* Indicadores Rápidos de Confiança */}
               <div className="mt-10 pt-6 border-t border-white/15 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs text-slate-200">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#00c878]" />
+                <div className="flex items-center gap-2 group cursor-default transition-all duration-200 hover:text-white">
+                  <CheckCircle2 className="h-4 w-4 text-[#00c878] group-hover:scale-115 transition-transform duration-200" />
                   <span>Baixa Instantânea no PIX</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#00c878]" />
+                <div className="flex items-center gap-2 group cursor-default transition-all duration-200 hover:text-white">
+                  <CheckCircle2 className="h-4 w-4 text-[#00c878] group-hover:scale-115 transition-transform duration-200" />
                   <span>3 Visões Integradas (RBAC)</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#00c878]" />
+                <div className="flex items-center gap-2 group cursor-default transition-all duration-200 hover:text-white">
+                  <CheckCircle2 className="h-4 w-4 text-[#00c878] group-hover:scale-115 transition-transform duration-200" />
                   <span>Conformidade com a LGPD</span>
                 </div>
               </div>
