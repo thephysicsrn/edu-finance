@@ -5,6 +5,7 @@ import { ContactFormSection } from "@/components/landing/contact-form";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { HeroInteractiveMesh } from "@/components/landing/hero-interactive-mesh";
 import { HeroMockup3D } from "@/components/landing/hero-mockup-3d";
+import { RoleProfilesShowcase } from "@/components/landing/role-profiles-showcase";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -307,79 +308,7 @@ export default async function LandingPage() {
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
-              {/* Cartão Perfil Admin */}
-              <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-10 w-10 rounded-xl bg-blue-100 text-[#0052ff] flex items-center justify-center font-bold text-xs mb-4">
-                  AD
-                </div>
-                <span className="text-[11px] font-bold text-[#0052ff] uppercase tracking-wider block mb-1">
-                  Perfil Direção
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">Administrador Geral</h3>
-                <p className="text-slate-600 text-xs sm:text-sm mb-4 leading-relaxed">
-                  Visão executiva 360° com faturamento previsto vs. realizado, DRE consolidado, índice de inadimplência e auditoria de parâmetros técnicos.
-                </p>
-                <div className="text-xs text-slate-600 space-y-2 pt-3 border-t border-slate-100">
-                  <p className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-                    <span>Fluxo de Caixa DRE em Tempo Real</span>
-                  </p>
-                  <p className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-blue-600 shrink-0" />
-                    <span>Gestão Completa de Turmas e Cursos</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* Cartão Perfil Secretaria */}
-              <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-10 w-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs mb-4">
-                  SC
-                </div>
-                <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider block mb-1">
-                  Perfil Atendimento
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">Secretaria Escolar</h3>
-                <p className="text-slate-600 text-xs sm:text-sm mb-4 leading-relaxed">
-                  Operações do balcão de atendimento: novas matrículas, controle de vagas restantes, baixa no caixa com comprovante e fila de cobrança no WhatsApp.
-                </p>
-                <div className="text-xs text-slate-600 space-y-2 pt-3 border-t border-slate-100">
-                  <p className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-                    <span>Matrícula em 1 clique com carnê gerado</span>
-                  </p>
-                  <p className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-                    <span>WhatsApp direto com pais em atraso</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* Cartão Perfil Professor */}
-              <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-10 w-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs mb-4">
-                  PF
-                </div>
-                <span className="text-[11px] font-bold text-indigo-700 uppercase tracking-wider block mb-1">
-                  Perfil Docente
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">Corpo Docente</h3>
-                <p className="text-slate-600 text-xs sm:text-sm mb-4 leading-relaxed">
-                  Ambiente limpo e 100% pedagógico: grade de aulas do dia, chamada digital rápida, acompanhamento de faltas e zero exposição de dados financeiros.
-                </p>
-                <div className="text-xs text-slate-600 space-y-2 pt-3 border-t border-slate-100">
-                  <p className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
-                    <span>Chamada rápida com 1 clique</span>
-                  </p>
-                  <p className="flex items-center gap-1.5 font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
-                    <span>Zero burocracia ou dados de faturas</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+            <RoleProfilesShowcase />
           </div>
         </section>
 
