@@ -750,19 +750,20 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
           </Card>
         </div>
 
-        {/* Bloco 3: Turma, Taxa de Matrícula & Mensalidades */}
+        {/* Bloco 3: Turma, Taxa de Matrícula, Material & Mensalidades */}
         <Card className="border-slate-200 shadow-sm">
           <CardHeader>
             <CardTitle className="text-base">
               3. Parâmetros de Matrícula & Plano de Cobrança
             </CardTitle>
             <CardDescription>
-              Configuração da taxa de matrícula imediata e do cronograma de mensalidades
+              Configuração da taxa de matrícula imediata, taxa de material didático e cronograma de mensalidades
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* Linha 1: Turma, Vencimento e Início */}
             <div className="grid gap-4 md:grid-cols-4">
-              <div>
+              <div className="md:col-span-2">
                 <Label htmlFor="classSelect">Turma Selecionada *</Label>
                 <select
                   id="classSelect"
@@ -776,45 +777,6 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
                     </option>
                   ))}
                 </select>
-              </div>
-
-              <div>
-                <Label htmlFor="fee">Taxa de Matrícula (R$) *</Label>
-                <Input
-                  id="fee"
-                  type="number"
-                  min={0}
-                  step="10"
-                  value={enrollmentFee}
-                  onChange={(e) => setEnrollmentFee(Number(e.target.value))}
-                />
-                <span className="text-[11px] text-slate-400">Pode ser paga no PIX ou Maquininha</span>
-              </div>
-
-              <div>
-                <Label htmlFor="materialFee">Taxa de Material Didático (R$)</Label>
-                <Input
-                  id="materialFee"
-                  type="number"
-                  min={0}
-                  step="10"
-                  value={materialFee}
-                  onChange={(e) => setMaterialFee(Number(e.target.value))}
-                />
-                <span className="text-[11px] text-slate-400">Apostilas & Livros (separado contabilmente)</span>
-              </div>
-
-              <div>
-                <Label htmlFor="discount">Bolsa / Desconto Mensal (%)</Label>
-                <Input
-                  id="discount"
-                  type="number"
-                  min={0}
-                  max={100}
-                  value={discountPercent}
-                  onChange={(e) => setDiscountPercent(Number(e.target.value))}
-                />
-                <span className="text-[11px] text-slate-400">Aplicado sobre cada mensalidade</span>
               </div>
 
               <div>
@@ -832,32 +794,6 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
                   <option value={25}>Dia 25 de cada mês</option>
                 </select>
               </div>
-            </div>
-
-            {/* Linha 2: Parcelamento do Material e Data Inicial */}
-            <div className="grid gap-4 md:grid-cols-2 pt-1 border-t border-slate-100">
-              <div>
-                <Label htmlFor="materialMode">Condição de Cobrança do Material Didático</Label>
-                <select
-                  id="materialMode"
-                  className="w-full h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                  value={materialPaymentMode}
-                  onChange={(e) => setMaterialPaymentMode(e.target.value as any)}
-                >
-                  <option value="INSTALLMENT_WITH_TUITION">
-                    Parcelar junto com as mensalidades ({durationMonths}x de {formatCurrency(materialFee > 0 ? materialFee / durationMonths : 0)}/mês - discriminado)
-                  </option>
-                  <option value="SEPARATE_AT_ENROLLMENT">
-                    À vista no ato da matrícula (Fatura imediata com PIX / Cartão)
-                  </option>
-                  <option value="INSTALLMENT_SEPARATE">
-                    Parcelado em faturas exclusivas de material
-                  </option>
-                </select>
-                <span className="text-[11px] text-slate-400">
-                  O valor será discriminado contabilmente nos relatórios financeiros e no boleto
-                </span>
-              </div>
 
               <div>
                 <Label htmlFor="firstDate">Mês da 1ª Mensalidade *</Label>
@@ -869,6 +805,73 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
                   value={firstDate}
                   onChange={(e) => setFirstDate(e.target.value)}
                 />
+              </div>
+            </div>
+
+            {/* Linha 2: Taxas e Condições Comerciais */}
+            <div className="grid gap-4 md:grid-cols-4 pt-2 border-t border-slate-100">
+              <div>
+                <Label htmlFor="fee">Taxa de Matrícula (R$) *</Label>
+                <Input
+                  id="fee"
+                  type="number"
+                  min={0}
+                  step="10"
+                  value={enrollmentFee}
+                  onChange={(e) => setEnrollmentFee(Number(e.target.value))}
+                />
+                <span className="text-[11px] text-slate-400">Paga no ato da matrícula (PIX/Cartão)</span>
+              </div>
+
+              <div>
+                <Label htmlFor="materialFee" className="flex items-center justify-between">
+                  <span>Taxa de Material Didático (R$) *</span>
+                </Label>
+                <Input
+                  id="materialFee"
+                  type="number"
+                  min={0}
+                  step="10"
+                  value={materialFee}
+                  onChange={(e) => setMaterialFee(Number(e.target.value))}
+                />
+                <span className="text-[11px] text-amber-700 font-medium">Apostilas & Livros (separado contabilmente)</span>
+              </div>
+
+              <div>
+                <Label htmlFor="discount">Bolsa / Desconto Mensal (%)</Label>
+                <Input
+                  id="discount"
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={discountPercent}
+                  onChange={(e) => setDiscountPercent(Number(e.target.value))}
+                />
+                <span className="text-[11px] text-slate-400">Aplicado sobre o valor do curso</span>
+              </div>
+
+              <div>
+                <Label htmlFor="materialMode">Cobrança do Material Didático</Label>
+                <select
+                  id="materialMode"
+                  className="w-full h-9 rounded-md border border-slate-200 bg-white px-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={materialPaymentMode}
+                  onChange={(e) => setMaterialPaymentMode(e.target.value as any)}
+                >
+                  <option value="INSTALLMENT_WITH_TUITION">
+                    Parcelar junto com as mensalidades ({durationMonths}x de {formatCurrency(materialFee > 0 ? materialFee / durationMonths : 0)}/mês)
+                  </option>
+                  <option value="SEPARATE_AT_ENROLLMENT">
+                    À vista no ato da matrícula
+                  </option>
+                  <option value="INSTALLMENT_SEPARATE">
+                    Parcelas exclusivas de material
+                  </option>
+                </select>
+                <span className="text-[11px] text-slate-400">
+                  Separado na contabilidade
+                </span>
               </div>
             </div>
 
