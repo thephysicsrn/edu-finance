@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   Users,
   DollarSign,
@@ -75,6 +76,10 @@ export default async function DashboardPage() {
   }
 
   // Renderização condicional por perfil de usuário
+  if (role === "GUARDIAN") {
+    redirect("/portal-do-responsavel");
+  }
+
   if (role === "TEACHER") {
     return (
       <TeacherDashboardView

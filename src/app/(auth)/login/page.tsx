@@ -112,15 +112,22 @@ function LoginForm() {
       if (res?.error) {
         setError("Usuário ou senha incorretos. Verifique suas credenciais.");
       } else {
-        if (
-          email.includes("pai") ||
-          email.includes("responsavel") ||
-          email.includes("mae")
-        ) {
-          window.location.href = "/portal-do-responsavel";
-        } else {
-          window.location.href = "/dashboard";
+        try {
+          const sessionRes = await fetch("/api/auth/session");
+          const sessionData = await sessionRes.json();
+          if (
+            sessionData?.user?.role === "GUARDIAN" ||
+            email.includes("pai") ||
+            email.includes("responsavel") ||
+            email.includes("mae")
+          ) {
+            window.location.href = "/portal-do-responsavel";
+            return;
+          }
+        } catch {
+          // fallback gracioso caso ocorra falha de parse
         }
+        window.location.href = "/dashboard";
       }
     } catch (err: any) {
       setError("Erro ao autenticar. Verifique sua conexão com o servidor.");
