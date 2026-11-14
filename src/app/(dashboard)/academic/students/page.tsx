@@ -1,43 +1,79 @@
 import { db } from "@/db";
-import { students } from "@/db/schema";
-import { formatCPF, formatPhone, formatDate } from "@/lib/utils";
+import { students, classes } from "@/db/schema";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Users, Search, UserPlus, Phone, Mail, Printer, Eye } from "lucide-react";
+import { Users, UserPlus } from "lucide-react";
 import Link from "next/link";
+import { StudentsTable } from "@/modules/academic/components/students-table";
 
 export const dynamic = "force-dynamic";
 
 export default async function StudentsPage() {
   let studentList: any[] = [];
+  let availableClasses: any[] = [];
 
   try {
-    studentList = await db.query.students.findMany({
-      with: {
-        guardian: true,
-        enrollments: {
-          with: {
-            class: true,
+    const [fetchedStudents, fetchedClasses] = await Promise.all([
+      db.query.students.findMany({
+        with: {
+          guardian: true,
+          enrollments: {
+            with: {
+              class: true,
+            },
           },
         },
-      },
-      limit: 50,
-    });
+        limit: 100,
+      }),
+      db.query.classes.findMany({
+        with: {
+          course: true,
+        },
+      }),
+    ]);
+
+    studentList = fetchedStudents;
+    availableClasses = fetchedClasses;
   } catch (error) {
     console.warn("Database not yet connected or seeded. Showing placeholder student list.");
   }
 
   // Preenche dados demonstrativos caso ainda não existam no banco
+  if (availableClasses.length === 0) {
+    availableClasses = [
+      {
+        id: "demo-cls-1",
+        name: "Turma Alfa - Medicina (Manhã)",
+        shift: "MORNING",
+        capacity: 40,
+        course: {
+          name: "Extensivo Medicina & Biológicas",
+          basePrice: "1250.00",
+        },
+      },
+      {
+        id: "demo-cls-2",
+        name: "Turma Beta - ITA/IME & Exatas (Tarde)",
+        shift: "AFTERNOON",
+        capacity: 35,
+        course: {
+          name: "Preparatório Militar & Exatas",
+          basePrice: "1100.00",
+        },
+      },
+      {
+        id: "demo-cls-3",
+        name: "Turma Gama - Redação Nota 1000 & Linguagens",
+        shift: "NIGHT",
+        capacity: 30,
+        course: {
+          name: "Módulo Intensivo de Redação",
+          basePrice: "450.00",
+        },
+      },
+    ];
+  }
+
   if (studentList.length === 0) {
     studentList = [
       {
@@ -55,8 +91,21 @@ export default async function StudentsPage() {
           {
             id: "demo-en-1",
             status: "ACTIVE",
+            classId: "demo-cls-1",
             class: {
+              id: "demo-cls-1",
               name: "Turma Alfa - Medicina (Manhã)",
+              shift: "MORNING",
+            },
+          },
+          {
+            id: "demo-en-1b",
+            status: "ACTIVE",
+            classId: "demo-cls-3",
+            class: {
+              id: "demo-cls-3",
+              name: "Turma Gama - Redação Nota 1000",
+              shift: "NIGHT",
             },
           },
         ],
@@ -76,8 +125,11 @@ export default async function StudentsPage() {
           {
             id: "demo-en-2",
             status: "ACTIVE",
+            classId: "demo-cls-2",
             class: {
+              id: "demo-cls-2",
               name: "Turma Beta - ITA/IME & Exatas (Tarde)",
+              shift: "AFTERNOON",
             },
           },
         ],
@@ -94,11 +146,11 @@ export default async function StudentsPage() {
             Alunos & Cadastros
           </h2>
           <p className="text-sm text-slate-500">
-            Listagem geral de alunos matriculados e seus respectivos responsáveis legais.
+            Listagem geral de alunos matriculados, gestão multiturma e transferência de sala.
           </p>
         </div>
         <Link href="/academic/enrollments/new">
-          <Button className="gap-2">
+          <Button className="gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
             <UserPlus className="h-4 w-4" />
             Nova Matrícula
           </Button>
@@ -106,103 +158,21 @@ export default async function StudentsPage() {
       </div>
 
       <Card className="border-slate-200 shadow-sm">
-        <CardHeader className="pb-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="w-full sm:w-80 relative">
-              <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <Input
-                placeholder="Buscar por nome do aluno ou CPF..."
-                className="pl-9 h-9"
-              />
-            </div>
-          </div>
+        <CardHeader className="pb-3 border-b border-slate-100">
+          <CardTitle className="text-base text-slate-900">
+            Relação Geral de Alunos & Turmas
+          </CardTitle>
+          <CardDescription>
+            Consulte responsáveis, histórico de turmas matriculadas ou efetue a transferência entre turmas.
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          {studentList.length === 0 ? (
-            <div className="text-center py-12 text-slate-500 text-sm">
-              Nenhum aluno cadastrado. Utilize o botão &ldquo;Nova Matrícula&rdquo; para iniciar o cadastro.
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome do Aluno</TableHead>
-                  <TableHead>CPF / Nascimento</TableHead>
-                  <TableHead>Responsável Legal</TableHead>
-                  <TableHead>Turma Atual</TableHead>
-                  <TableHead className="text-center">Status da Matrícula</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {studentList.map((st) => {
-                  const activeEnrollment = st.enrollments?.[0];
-                  return (
-                    <TableRow key={st.id}>
-                      <TableCell>
-                        <p className="font-semibold text-slate-900">{st.fullName}</p>
-                        <p className="text-xs text-slate-500">{st.email || "Sem e-mail"}</p>
-                      </TableCell>
-
-                      <TableCell className="text-xs font-mono">
-                        <p>{formatCPF(st.cpf)}</p>
-                        <p className="text-slate-400">{formatDate(st.birthDate)}</p>
-                      </TableCell>
-
-                      <TableCell>
-                        <p className="text-sm font-medium text-slate-800">
-                          {st.guardian?.fullName || "Não informado"}
-                        </p>
-                        <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                          <Phone className="h-3 w-3" />
-                          {formatPhone(st.guardian?.phone)}
-                        </p>
-                      </TableCell>
-
-                      <TableCell className="text-sm text-slate-700">
-                        {activeEnrollment?.class?.name || "Sem turma vinculada"}
-                      </TableCell>
-
-                      <TableCell className="text-center">
-                        <Badge
-                          variant={
-                            activeEnrollment?.status === "ACTIVE"
-                              ? "success"
-                              : "secondary"
-                          }
-                        >
-                          {activeEnrollment?.status || "PENDENTE"}
-                        </Badge>
-                      </TableCell>
-
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          {activeEnrollment && (
-                            <Link
-                              href={`/academic/enrollments/${activeEnrollment.id}/receipt`}
-                              target="_blank"
-                              title="Imprimir Comprovante de Matrícula"
-                            >
-                              <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs text-indigo-700 hover:text-indigo-800 border-indigo-200 hover:bg-indigo-50">
-                                <Printer className="h-3.5 w-3.5" />
-                                Comprovante
-                              </Button>
-                            </Link>
-                          )}
-                          <Button variant="ghost" size="sm" className="h-8 text-xs text-slate-600">
-                            Ficha
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          )}
+        <CardContent className="pt-4">
+          <StudentsTable
+            initialStudents={studentList}
+            availableClasses={availableClasses}
+          />
         </CardContent>
       </Card>
     </div>
   );
 }
-

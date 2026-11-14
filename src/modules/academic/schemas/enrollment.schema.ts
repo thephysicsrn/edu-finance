@@ -36,8 +36,16 @@ export const createEnrollmentSchema = z
 
     classId: z.string().uuid("Selecione uma turma válida"),
     
-    // Condições Comerciais e Taxa de Matrícula
+    // Condições Comerciais, Taxa de Matrícula e Material Didático
     enrollmentFee: z.coerce.number().min(0, "Taxa de matrícula não pode ser negativa").default(250),
+    materialFee: z.coerce.number().min(0, "Taxa de material não pode ser negativa").default(0),
+    materialInstallments: z.coerce.number().int().min(1, "Parcelamento mínimo é 1x").max(12, "Parcelamento máximo é 12x").default(1),
+    materialPaymentMode: z.enum([
+      "INSTALLMENT_WITH_TUITION", // Parcelado junto com a mensalidade do curso (discriminado)
+      "SEPARATE_AT_ENROLLMENT",   // À vista no ato da matrícula
+      "INSTALLMENT_SEPARATE",     // Parcelado em parcelas exclusivas de material
+    ]).default("INSTALLMENT_WITH_TUITION"),
+    unifyWithExistingInvoices: z.boolean().default(true).optional(),
     discountPercentage: z.coerce.number().min(0, "Desconto não pode ser negativo").max(100, "Desconto máximo é 100%").default(0),
     discountReason: z.string().optional(),
 

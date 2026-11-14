@@ -1,4 +1,4 @@
-export type UserRole = "ADMIN" | "SECRETARY" | "TEACHER";
+export type UserRole = "ADMIN" | "SECRETARY" | "TEACHER" | "GUARDIAN";
 
 export const PERMISSIONS = {
   ADMIN: ["all"],
@@ -15,6 +15,10 @@ export const PERMISSIONS = {
     "attendance:read",
     "attendance:write",
     "lessons:write",
+  ],
+  GUARDIAN: [
+    "guardian:read",
+    "financial:student:read",
   ],
 } as const;
 

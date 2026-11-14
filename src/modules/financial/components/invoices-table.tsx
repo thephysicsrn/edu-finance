@@ -44,6 +44,11 @@ export interface InvoiceItem {
   amount: string;
   discountAmount: string;
   finalAmount: string;
+  tuitionAmount?: string | number | null;
+  materialAmount?: string | number | null;
+  isUnified?: boolean | null;
+  unifiedDetails?: string | null;
+  notes?: string | null;
   dueDate: string;
   status: "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
   invoiceType?: "ENROLLMENT_FEE" | "TUITION" | "MATERIAL" | "RENEGOTIATION";
@@ -52,6 +57,12 @@ export interface InvoiceItem {
   barcode?: string | null;
   student?: {
     fullName: string;
+  } | null;
+  enrollment?: {
+    class?: {
+      id: string;
+      name: string;
+    } | null;
   } | null;
 }
 
@@ -63,6 +74,16 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
   const [invoicesList, setInvoicesList] = useState<InvoiceItem[]>(initialInvoices);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [classFilter, setClassFilter] = useState<string>("ALL");
+
+  // Lista de turmas presentes para o filtro
+  const availableClassNames = Array.from(
+    new Set(
+      invoicesList
+        .map((i) => i.enrollment?.class?.name)
+        .filter(Boolean) as string[]
+    )
+  );
 
   // Modais
   const [activePixModal, setActivePixModal] = useState<InvoiceItem | null>(null);
@@ -97,6 +118,7 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
   const filteredInvoices = invoicesList.filter((inv) => {
     const matchesSearch =
       (inv.student?.fullName || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (inv.enrollment?.class?.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
       inv.id.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
@@ -104,9 +126,14 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
       (statusFilter === "PAID" && inv.status === "PAID") ||
       (statusFilter === "PENDING" && inv.status === "PENDING") ||
       (statusFilter === "OVERDUE" && inv.status === "OVERDUE") ||
-      (statusFilter === "ENROLLMENT_FEE" && inv.invoiceType === "ENROLLMENT_FEE");
+      (statusFilter === "ENROLLMENT_FEE" && inv.invoiceType === "ENROLLMENT_FEE") ||
+      (statusFilter === "MATERIAL" && (inv.invoiceType === "MATERIAL" || Number(inv.materialAmount || 0) > 0));
 
-    return matchesSearch && matchesStatus;
+    const matchesClass =
+      classFilter === "ALL" ||
+      inv.enrollment?.class?.name === classFilter;
+
+    return matchesSearch && matchesStatus && matchesClass;
   });
 
   function openPosModal(inv: InvoiceItem) {
@@ -329,6 +356,14 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
           </Button>
           <Button
             size="sm"
+            variant={statusFilter === "MATERIAL" ? "default" : "outline"}
+            onClick={() => setStatusFilter("MATERIAL")}
+            className="text-xs h-8 text-amber-800 hover:bg-amber-50"
+          >
+            Material Didático
+          </Button>
+          <Button
+            size="sm"
             variant={statusFilter === "PENDING" ? "default" : "outline"}
             onClick={() => setStatusFilter("PENDING")}
             className="text-xs h-8 text-amber-700 hover:bg-amber-50"
@@ -351,6 +386,22 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
           >
             Pagas
           </Button>
+
+          {/* Filtro Dropdown por Turma */}
+          {availableClassNames.length > 0 && (
+            <select
+              value={classFilter}
+              onChange={(e) => setClassFilter(e.target.value)}
+              className="text-xs h-8 rounded-md border border-slate-300 px-2 bg-white text-slate-800 font-medium focus:ring-1 focus:ring-indigo-500 focus:outline-hidden"
+            >
+              <option value="ALL">Todas as Turmas</option>
+              {availableClassNames.map((cName) => (
+                <option key={cName} value={cName}>
+                  {cName}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
@@ -378,7 +429,19 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
                   <p className="font-semibold text-slate-900">
                     {inv.student?.fullName || "Aluno"}
                   </p>
-                  <p className="text-xs text-slate-400 font-mono">ID: {inv.id.slice(0, 8)}...</p>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    {inv.enrollment?.class && (
+                      <span className="text-[11px] font-medium text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
+                        {inv.enrollment.class.name}
+                      </span>
+                    )}
+                    {inv.isUnified && (
+                      <Badge variant="outline" className="text-[10px] py-0 px-1 bg-blue-50 text-indigo-700 border-indigo-200">
+                        Multiturma Unificado
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-mono mt-0.5">ID: {inv.id.slice(0, 8)}...</p>
                 </TableCell>
 
                 <TableCell>
@@ -386,10 +449,21 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
                     <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200 text-[11px]">
                       Taxa de Matrícula
                     </Badge>
+                  ) : inv.invoiceType === "MATERIAL" ? (
+                    <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-200 text-[11px]">
+                      Taxa de Material Didático
+                    </Badge>
                   ) : (
-                    <span className="text-xs font-mono text-slate-600">
-                      Mensalidade ({inv.installmentNumber}/{inv.totalInstallments})
-                    </span>
+                    <div className="space-y-0.5">
+                      <span className="text-xs font-mono text-slate-700 block">
+                        Mensalidade ({inv.installmentNumber}/{inv.totalInstallments})
+                      </span>
+                      {Number(inv.materialAmount || 0) > 0 && (
+                        <span className="text-[10px] text-amber-700 font-medium block">
+                          + Material: {formatCurrency(Number(inv.materialAmount))}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </TableCell>
 

@@ -32,8 +32,10 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN null; END $$;
 
 DO $$ BEGIN
-    CREATE TYPE "user_role" AS ENUM('ADMIN', 'SECRETARY', 'TEACHER');
-EXCEPTION WHEN duplicate_object THEN null; END $$;
+    CREATE TYPE "user_role" AS ENUM('ADMIN', 'SECRETARY', 'TEACHER', 'GUARDIAN');
+EXCEPTION WHEN duplicate_object THEN
+    ALTER TYPE "user_role" ADD VALUE IF NOT EXISTS 'GUARDIAN';
+END $$;
 
 -- 3. TABELAS
 CREATE TABLE IF NOT EXISTS "users" (
@@ -142,6 +144,8 @@ CREATE TABLE IF NOT EXISTS "enrollments" (
 	"status" "enrollment_status" DEFAULT 'ACTIVE' NOT NULL,
 	"enrollment_fee" numeric(10, 2) DEFAULT '0.00' NOT NULL,
 	"is_fee_paid" boolean DEFAULT false NOT NULL,
+	"material_fee" numeric(10, 2) DEFAULT '0.00' NOT NULL,
+	"material_installments" integer DEFAULT 1 NOT NULL,
 	"discount_percentage" numeric(5, 2) DEFAULT '0.00' NOT NULL,
 	"discount_reason" text,
 	"enrollment_date" timestamp DEFAULT now() NOT NULL,
@@ -183,6 +187,10 @@ CREATE TABLE IF NOT EXISTS "invoices" (
 	"amount" numeric(10, 2) NOT NULL,
 	"discount_amount" numeric(10, 2) DEFAULT '0.00' NOT NULL,
 	"final_amount" numeric(10, 2) NOT NULL,
+	"tuition_amount" numeric(10, 2),
+	"material_amount" numeric(10, 2) DEFAULT '0.00' NOT NULL,
+	"is_unified" boolean DEFAULT false NOT NULL,
+	"unified_details" text,
 	"due_date" date NOT NULL,
 	"status" "invoice_status" DEFAULT 'PENDING' NOT NULL,
 	"gateway" varchar(50) DEFAULT 'INTERNAL' NOT NULL,
@@ -400,3 +408,30 @@ VALUES
   'PENDING'
 )
 ON CONFLICT ("id") DO NOTHING;
+
+-- ==============================================================================
+-- 7. TABELA DE TRANSFERÊNCIAS DE TURMA & ATUALIZAÇÕES INCREMENTAIS
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS "class_transfers" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"student_id" uuid NOT NULL REFERENCES "students"("id") ON DELETE cascade,
+	"enrollment_id" uuid REFERENCES "enrollments"("id") ON DELETE set null,
+	"from_class_id" uuid NOT NULL REFERENCES "classes"("id") ON DELETE restrict,
+	"to_class_id" uuid NOT NULL REFERENCES "classes"("id") ON DELETE restrict,
+	"reason" text,
+	"transferred_at" timestamp DEFAULT now() NOT NULL,
+	"transferred_by" uuid REFERENCES "users"("id") ON DELETE set null
+);
+
+CREATE INDEX IF NOT EXISTS "transfers_student_idx" ON "class_transfers" ("student_id");
+CREATE INDEX IF NOT EXISTS "transfers_from_class_idx" ON "class_transfers" ("from_class_id");
+CREATE INDEX IF NOT EXISTS "transfers_to_class_idx" ON "class_transfers" ("to_class_id");
+
+-- Migrações seguras (caso o banco já tenha tabelas criadas):
+ALTER TABLE "enrollments" ADD COLUMN IF NOT EXISTS "material_fee" numeric(10, 2) DEFAULT '0.00' NOT NULL;
+ALTER TABLE "enrollments" ADD COLUMN IF NOT EXISTS "material_installments" integer DEFAULT 1 NOT NULL;
+ALTER TABLE "invoices" ADD COLUMN IF NOT EXISTS "tuition_amount" numeric(10, 2);
+ALTER TABLE "invoices" ADD COLUMN IF NOT EXISTS "material_amount" numeric(10, 2) DEFAULT '0.00' NOT NULL;
+ALTER TABLE "invoices" ADD COLUMN IF NOT EXISTS "is_unified" boolean DEFAULT false NOT NULL;
+ALTER TABLE "invoices" ADD COLUMN IF NOT EXISTS "unified_details" text;
+

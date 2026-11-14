@@ -39,6 +39,14 @@ const DEMO_PROFILES = [
     password: "prof123",
     icon: GraduationCap,
   },
+  {
+    role: "GUARDIAN",
+    title: "Pai / Responsável",
+    badge: "Boletos & PIX do Filho",
+    email: "responsavel@cursinhopro.com.br",
+    password: "pai123",
+    icon: ShieldCheck,
+  },
 ];
 
 function LoginForm() {
@@ -77,6 +85,15 @@ function LoginForm() {
       setEmail("professor@cursinhopro.com.br");
       setPassword("prof123");
       setError(null);
+    } else if (
+      roleParam === "pai" ||
+      roleParam === "responsavel" ||
+      roleParam === "guardian" ||
+      roleParam === "familia"
+    ) {
+      setEmail("responsavel@cursinhopro.com.br");
+      setPassword("pai123");
+      setError(null);
     }
   }, [roleParam]);
 
@@ -95,7 +112,15 @@ function LoginForm() {
       if (res?.error) {
         setError("Usuário ou senha incorretos. Verifique suas credenciais.");
       } else {
-        window.location.href = "/dashboard";
+        if (
+          email.includes("pai") ||
+          email.includes("responsavel") ||
+          email.includes("mae")
+        ) {
+          window.location.href = "/portal-do-responsavel";
+        } else {
+          window.location.href = "/dashboard";
+        }
       }
     } catch (err: any) {
       setError("Erro ao autenticar. Verifique sua conexão com o servidor.");

@@ -9,12 +9,12 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      role: "ADMIN" | "SECRETARY" | "TEACHER";
+      role: "ADMIN" | "SECRETARY" | "TEACHER" | "GUARDIAN";
     } & DefaultSession["user"];
   }
 
   interface User {
-    role: "ADMIN" | "SECRETARY" | "TEACHER";
+    role: "ADMIN" | "SECRETARY" | "TEACHER" | "GUARDIAN";
   }
 }
 
@@ -76,6 +76,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           };
         }
 
+        if (
+          (email.includes("pai") || email.includes("responsavel") || email.includes("mae")) &&
+          (password === "pai123" || password === "responsavel123" || password === "123456")
+        ) {
+          return {
+            id: "55555555-5555-5555-5555-555555555555",
+            name: "Mariana Alencar Silveira (Responsável)",
+            email: "mariana.silveira@email.com",
+            role: "GUARDIAN" as const,
+          };
+        }
+
         // 2. Busca no banco de dados para contas cadastradas
         try {
           let user = await db.query.users.findFirst({
@@ -117,7 +129,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.name = (token.name as string) || session.user.name;
         session.user.email = (token.email as string) || session.user.email;
-        session.user.role = token.role as "ADMIN" | "SECRETARY" | "TEACHER";
+        session.user.role = token.role as "ADMIN" | "SECRETARY" | "TEACHER" | "GUARDIAN";
       }
       return session;
     },

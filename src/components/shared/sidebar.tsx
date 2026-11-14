@@ -14,6 +14,7 @@ import {
   TrendingUp,
   LogOut,
   X,
+  ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EduFinanceLogo } from "@/components/shared/logo";
@@ -71,6 +72,8 @@ export function Sidebar({ isOpen = false, onClose, user }: SidebarProps) {
     ? "PF"
     : role === "SECRETARY"
     ? "SC"
+    : role === "GUARDIAN"
+    ? "RP"
     : "AD";
 
   const displayName =
@@ -79,50 +82,86 @@ export function Sidebar({ isOpen = false, onClose, user }: SidebarProps) {
       ? "Prof. Carlos Eduardo"
       : role === "SECRETARY"
       ? "Secretaria de Atendimento"
+      : role === "GUARDIAN"
+      ? "Mariana Alencar Silveira"
       : "Coordenador Geral");
 
   const displayRoleLabel =
-    role === "TEACHER" ? "PROFESSOR" : role === "SECRETARY" ? "SECRETARIA" : "ADMIN";
+    role === "TEACHER"
+      ? "PROFESSOR"
+      : role === "SECRETARY"
+      ? "SECRETARIA"
+      : role === "GUARDIAN"
+      ? "RESPONSÁVEL LEGAL"
+      : "ADMIN";
 
-  // Filtra as categorias de navegação de acordo com o perfil
-  const filteredNavGroups = [
-    {
-      category: role === "TEACHER" ? "Painel Docente" : "Visão Geral",
-      items: [
-        {
-          name: role === "TEACHER" ? "Painel Pedagógico" : role === "SECRETARY" ? "Painel da Secretaria" : "Dashboard Executivo",
-          href: "/dashboard",
-          icon: LayoutDashboard,
-        },
-      ],
-    },
-    {
-      category: "Módulo Acadêmico",
-      items: [
-        ...(role !== "TEACHER"
-          ? [{ name: "Nova Matrícula", href: "/academic/enrollments/new", icon: UserPlus }]
-          : []),
-        { name: "Alunos & Cadastros", href: "/academic/students", icon: Users },
-        { name: "Cursos e Turmas", href: "/academic/classes", icon: BookOpen },
-        { name: "Diário de Frequência", href: "/academic/attendance", icon: CalendarCheck },
-      ],
-    },
-    // Professores NÃO possuem acesso a dados financeiros
-    ...(role !== "TEACHER"
+  // Se for Responsável Legal (GUARDIAN), exibe apenas o menu do pai
+  const filteredNavGroups =
+    role === "GUARDIAN"
       ? [
           {
-            category: "Módulo Financeiro",
+            category: "Portal da Família",
             items: [
-              { name: "Mensalidades & Baixas", href: "/financial/invoices", icon: Receipt },
-              { name: "Inadimplência", href: "/financial/defaulters", icon: AlertTriangle },
-              ...(role === "ADMIN"
-                ? [{ name: "Relatório de Fluxo", href: "/financial/cashflow", icon: TrendingUp }]
-                : []),
+              {
+                name: "Mensalidades do Filho",
+                href: "/portal-do-responsavel",
+                icon: ShieldCheck,
+              },
             ],
           },
         ]
-      : []),
-  ];
+      : [
+          {
+            category: role === "TEACHER" ? "Painel Docente" : "Visão Geral",
+            items: [
+              {
+                name:
+                  role === "TEACHER"
+                    ? "Painel Pedagógico"
+                    : role === "SECRETARY"
+                    ? "Painel da Secretaria"
+                    : "Dashboard Executivo",
+                href: "/dashboard",
+                icon: LayoutDashboard,
+              },
+              ...(role !== "TEACHER"
+                ? [
+                    {
+                      name: "Portal do Responsável",
+                      href: "/portal-do-responsavel",
+                      icon: ShieldCheck,
+                    },
+                  ]
+                : []),
+            ],
+          },
+          {
+            category: "Módulo Acadêmico",
+            items: [
+              ...(role !== "TEACHER"
+                ? [{ name: "Nova Matrícula", href: "/academic/enrollments/new", icon: UserPlus }]
+                : []),
+              { name: "Alunos & Cadastros", href: "/academic/students", icon: Users },
+              { name: "Cursos e Turmas", href: "/academic/classes", icon: BookOpen },
+              { name: "Diário de Frequência", href: "/academic/attendance", icon: CalendarCheck },
+            ],
+          },
+          // Professores NÃO possuem acesso a dados financeiros
+          ...(role !== "TEACHER"
+            ? [
+                {
+                  category: "Módulo Financeiro",
+                  items: [
+                    { name: "Mensalidades & Baixas", href: "/financial/invoices", icon: Receipt },
+                    { name: "Inadimplência", href: "/financial/defaulters", icon: AlertTriangle },
+                    ...(role === "ADMIN"
+                      ? [{ name: "Relatório de Fluxo", href: "/financial/cashflow", icon: TrendingUp }]
+                      : []),
+                  ],
+                },
+              ]
+            : []),
+        ];
 
   async function handleSignOut() {
     try {

@@ -25,8 +25,13 @@ import {
   ShieldCheck,
   Printer,
   FileText,
+  KeyRound,
 } from "lucide-react";
 import { EnrollmentReceipt, EnrollmentReceiptData } from "./enrollment-receipt";
+import {
+  GuardianAccessSheet,
+  GuardianAccessSheetData,
+} from "./guardian-access-sheet";
 
 interface ClassOption {
   id: string;
@@ -55,6 +60,10 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [createdReceiptData, setCreatedReceiptData] = useState<EnrollmentReceiptData | null>(null);
 
+  // Modal da Folha de Acesso e Login do Responsável
+  const [showGuardianAccessModal, setShowGuardianAccessModal] = useState(false);
+  const [createdGuardianAccessData, setCreatedGuardianAccessData] = useState<GuardianAccessSheetData | null>(null);
+
   // Modal pós-matrícula com dados do PIX e Maquininha
   const [feeChargeModal, setFeeChargeModal] = useState<{
     invoiceId: string;
@@ -78,6 +87,11 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
     availableClasses[0]?.id || ""
   );
   const [enrollmentFee, setEnrollmentFee] = useState<number>(250);
+  const [materialFee, setMaterialFee] = useState<number>(300);
+  const [materialPaymentMode, setMaterialPaymentMode] = useState<
+    "INSTALLMENT_WITH_TUITION" | "SEPARATE_AT_ENROLLMENT" | "INSTALLMENT_SEPARATE"
+  >("INSTALLMENT_WITH_TUITION");
+  const [unifyWithExistingInvoices, setUnifyWithExistingInvoices] = useState<boolean>(true);
   const [discountPercent, setDiscountPercent] = useState<number>(0);
   const [dueDay, setDueDay] = useState<number>(10);
   const [firstDate, setFirstDate] = useState<string>(
@@ -178,7 +192,13 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
   const discountAmount = Number(((basePrice * discountPercent) / 100).toFixed(2));
   const finalPrice = Number((basePrice - discountAmount).toFixed(2));
   const totalTuitionContract = Number((finalPrice * durationMonths).toFixed(2));
-  const grandTotal = Number((totalTuitionContract + enrollmentFee).toFixed(2));
+
+  // Cota mensal de material se parcelado junto com as mensalidades
+  const monthlyMaterial = materialPaymentMode === "INSTALLMENT_WITH_TUITION" && materialFee > 0
+    ? Number((materialFee / durationMonths).toFixed(2))
+    : 0;
+  const finalCombinedMonthlyInvoice = Number((finalPrice + monthlyMaterial).toFixed(2));
+  const grandTotal = Number((totalTuitionContract + enrollmentFee + materialFee).toFixed(2));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -200,6 +220,10 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
       const response = await createEnrollmentAction({
         classId: selectedClassId,
         enrollmentFee,
+        materialFee,
+        materialInstallments: durationMonths,
+        materialPaymentMode,
+        unifyWithExistingInvoices,
         discountPercentage: discountPercent,
         discountReason: discountPercent > 0 ? "Bolsa de Estudos / Convênio" : undefined,
         dueDay,
@@ -253,6 +277,7 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
           financial: {
             enrollmentFee,
             isFeePaid: enrollmentFee === 0,
+            materialFee,
             monthlyPrice: finalPrice,
             discountPercent,
             discountAmount,
@@ -261,6 +286,39 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
           },
         };
         setCreatedReceiptData(receipt);
+
+        // Monta os dados da Folha de Acesso do Responsável para impressão
+        const accessSheetData: GuardianAccessSheetData = {
+          enrollmentNumber: response.enrollmentNumber,
+          issuedAt: new Date(),
+          student: {
+            fullName: student.fullName,
+            cpf: student.cpf,
+            birthDate: student.birthDate,
+          },
+          guardian: {
+            fullName: effectiveGuardian.fullName,
+            cpf: effectiveGuardian.cpf,
+            email: response.guardianAccess?.email || effectiveGuardian.email,
+            phone: effectiveGuardian.phone,
+            relationship: effectiveGuardian.relationship,
+          },
+          credentials: {
+            portalUrl: "/portal-do-responsavel",
+            loginEmail: response.guardianAccess?.email || effectiveGuardian.email,
+            initialPassword: response.guardianAccess?.tempPassword || "Pais@2026",
+          },
+          course: {
+            name: selectedClass?.course.name || "Curso Geral",
+            className: selectedClass?.name || "Turma Geral",
+            shift: selectedClass?.shift || "MORNING",
+            dueDay,
+            monthlyPrice: finalPrice,
+            materialFee,
+            totalInstallments: durationMonths,
+          },
+        };
+        setCreatedGuardianAccessData(accessSheetData);
 
         if (response.enrollmentFeeCharge) {
           setFeeChargeModal({
@@ -271,8 +329,8 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
           setPaymentTab("PIX");
           setPosStep("CONFIG");
         } else {
-          // Se não há taxa, abre direto opção de imprimir comprovante
-          setShowReceiptModal(true);
+          // Se não há taxa imediata, abre direto a folha de acesso do responsável
+          setShowGuardianAccessModal(true);
         }
       } else {
         setFeedback({
@@ -734,6 +792,19 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
               </div>
 
               <div>
+                <Label htmlFor="materialFee">Taxa de Material Didático (R$)</Label>
+                <Input
+                  id="materialFee"
+                  type="number"
+                  min={0}
+                  step="10"
+                  value={materialFee}
+                  onChange={(e) => setMaterialFee(Number(e.target.value))}
+                />
+                <span className="text-[11px] text-slate-400">Apostilas & Livros (separado contabilmente)</span>
+              </div>
+
+              <div>
                 <Label htmlFor="discount">Bolsa / Desconto Mensal (%)</Label>
                 <Input
                   id="discount"
@@ -763,53 +834,109 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="firstDate">Mês da 1ª Mensalidade *</Label>
-              <Input
-                id="firstDate"
-                type="date"
-                className="max-w-xs"
-                required
-                value={firstDate}
-                onChange={(e) => setFirstDate(e.target.value)}
+            {/* Linha 2: Parcelamento do Material e Data Inicial */}
+            <div className="grid gap-4 md:grid-cols-2 pt-1 border-t border-slate-100">
+              <div>
+                <Label htmlFor="materialMode">Condição de Cobrança do Material Didático</Label>
+                <select
+                  id="materialMode"
+                  className="w-full h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  value={materialPaymentMode}
+                  onChange={(e) => setMaterialPaymentMode(e.target.value as any)}
+                >
+                  <option value="INSTALLMENT_WITH_TUITION">
+                    Parcelar junto com as mensalidades ({durationMonths}x de {formatCurrency(materialFee > 0 ? materialFee / durationMonths : 0)}/mês - discriminado)
+                  </option>
+                  <option value="SEPARATE_AT_ENROLLMENT">
+                    À vista no ato da matrícula (Fatura imediata com PIX / Cartão)
+                  </option>
+                  <option value="INSTALLMENT_SEPARATE">
+                    Parcelado em faturas exclusivas de material
+                  </option>
+                </select>
+                <span className="text-[11px] text-slate-400">
+                  O valor será discriminado contabilmente nos relatórios financeiros e no boleto
+                </span>
+              </div>
+
+              <div>
+                <Label htmlFor="firstDate">Mês da 1ª Mensalidade *</Label>
+                <Input
+                  id="firstDate"
+                  type="date"
+                  className="w-full"
+                  required
+                  value={firstDate}
+                  onChange={(e) => setFirstDate(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Opção Multiturma: Boleto Unificado */}
+            <div className="p-3 bg-blue-50/70 rounded-xl border border-blue-200 flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="unifyInvoices"
+                checked={unifyWithExistingInvoices}
+                onChange={(e) => setUnifyWithExistingInvoices(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
               />
+              <label htmlFor="unifyInvoices" className="text-xs text-slate-700 cursor-pointer">
+                <span className="font-bold text-slate-900 block">
+                  Unificar boletos multiturma (Se o aluno fizer mais de um cursinho)
+                </span>
+                Gera boletos mensais somando a mensalidade de ambas as turmas frequentadas pelo aluno, emitindo uma única cobrança com os valores discriminados para o responsável financeiro.
+              </label>
             </div>
 
             {/* Simulação Consolidada do Contrato */}
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 grid grid-cols-2 md:grid-cols-6 gap-3">
               <div>
-                <p className="text-xs text-slate-500 font-medium">Taxa de Matrícula:</p>
-                <p className="text-base font-bold text-slate-900">
+                <p className="text-xs text-slate-500 font-medium">Matrícula:</p>
+                <p className="text-sm font-bold text-slate-900">
                   {formatCurrency(enrollmentFee)}
                 </p>
-                <span className="text-[10px] text-indigo-600 font-semibold">● PIX ou Maquininha</span>
+                <span className="text-[10px] text-indigo-600 font-semibold">● No ato</span>
               </div>
 
               <div>
-                <p className="text-xs text-slate-500 font-medium">Mensalidade Nominal:</p>
-                <p className="text-sm font-semibold text-slate-500 line-through">
-                  {formatCurrency(basePrice)}
+                <p className="text-xs text-slate-500 font-medium">Taxa de Material:</p>
+                <p className="text-sm font-bold text-amber-700">
+                  {formatCurrency(materialFee)}
                 </p>
+                <span className="text-[10px] text-slate-500">
+                  {materialPaymentMode === "INSTALLMENT_WITH_TUITION" && materialFee > 0
+                    ? `+${formatCurrency(monthlyMaterial)}/mês`
+                    : "À vista"}
+                </span>
               </div>
 
               <div>
-                <p className="text-xs text-slate-500 font-medium">Desconto Mensal:</p>
+                <p className="text-xs text-slate-500 font-medium">Mensalidade Curso:</p>
+                <p className="text-sm font-bold text-slate-800">
+                  {formatCurrency(finalPrice)}
+                </p>
+                <span className="text-[10px] text-slate-400">({durationMonths} parcelas)</span>
+              </div>
+
+              <div>
+                <p className="text-xs text-slate-500 font-medium">Boleto Mensal:</p>
+                <p className="text-base font-extrabold text-indigo-600">
+                  {formatCurrency(finalCombinedMonthlyInvoice)}
+                </p>
+                <span className="text-[10px] text-indigo-600 font-medium">Curso + Material</span>
+              </div>
+
+              <div>
+                <p className="text-xs text-slate-500 font-medium">Desconto:</p>
                 <Badge variant={discountPercent > 0 ? "success" : "secondary"}>
-                  {discountPercent}% ({formatCurrency(discountAmount)})
+                  {discountPercent}%
                 </Badge>
               </div>
 
               <div>
-                <p className="text-xs text-slate-500 font-medium">Mensalidade Líquida:</p>
-                <p className="text-base font-bold text-indigo-600">
-                  {formatCurrency(finalPrice)}
-                  <span className="text-xs font-normal text-slate-400"> ({durationMonths}x)</span>
-                </p>
-              </div>
-
-              <div>
                 <p className="text-xs text-slate-500 font-medium">Total Geral:</p>
-                <p className="text-lg font-extrabold text-slate-900">
+                <p className="text-base font-extrabold text-slate-900">
                   {formatCurrency(grandTotal)}
                 </p>
               </div>
@@ -1052,17 +1179,30 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
               </div>
             )}
 
-            {/* BOTÃO PARA IMPRIMIR COMPROVANTE DIRETO */}
+            {/* BOTÕES PARA IMPRIMIR FOLHA DO PAI E COMPROVANTE DIRETO */}
             <div className="pt-2 border-t border-slate-100 space-y-2">
+              <Button
+                type="button"
+                onClick={() => {
+                  setFeeChargeModal(null);
+                  setShowGuardianAccessModal(true);
+                }}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white gap-2 font-medium"
+              >
+                <KeyRound className="h-4 w-4" />
+                Imprimir Folha de Acesso do Responsável (A4)
+              </Button>
+
               <Button
                 type="button"
                 onClick={() => {
                   setFeeChargeModal(null);
                   setShowReceiptModal(true);
                 }}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white gap-2 font-medium"
+                variant="outline"
+                className="w-full border-slate-300 text-slate-800 hover:bg-slate-50 gap-2 font-medium"
               >
-                <Printer className="h-4 w-4 text-indigo-400" />
+                <Printer className="h-4 w-4 text-slate-600" />
                 Imprimir Comprovante de Matrícula (A4)
               </Button>
 
@@ -1080,6 +1220,18 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* MODAL IMPRIMÍVEL DA FOLHA DE ACESSO DO RESPONSÁVEL */}
+      {showGuardianAccessModal && createdGuardianAccessData && (
+        <GuardianAccessSheet
+          data={createdGuardianAccessData}
+          isModal={true}
+          onClose={() => {
+            setShowGuardianAccessModal(false);
+            setShowReceiptModal(true);
+          }}
+        />
       )}
 
       {/* MODAL IMPRIMÍVEL DO COMPROVANTE DE MATRÍCULA */}

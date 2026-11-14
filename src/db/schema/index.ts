@@ -23,6 +23,7 @@ export const userRoleEnum = pgEnum("user_role", [
   "ADMIN",
   "SECRETARY",
   "TEACHER",
+  "GUARDIAN",
 ]);
 
 export const enrollmentStatusEnum = pgEnum("enrollment_status", [
@@ -243,6 +244,10 @@ export const enrollments = pgTable(
       .default("0.00")
       .notNull(),
     isFeePaid: boolean("is_fee_paid").default(false).notNull(),
+    materialFee: decimal("material_fee", { precision: 10, scale: 2 })
+      .default("0.00")
+      .notNull(),
+    materialInstallments: integer("material_installments").default(1).notNull(),
     discountPercentage: decimal("discount_percentage", {
       precision: 5,
       scale: 2,
@@ -353,6 +358,12 @@ export const invoices = pgTable(
       .default("0.00")
       .notNull(),
     finalAmount: decimal("final_amount", { precision: 10, scale: 2 }).notNull(),
+    tuitionAmount: decimal("tuition_amount", { precision: 10, scale: 2 }),
+    materialAmount: decimal("material_amount", { precision: 10, scale: 2 })
+      .default("0.00")
+      .notNull(),
+    isUnified: boolean("is_unified").default(false).notNull(),
+    unifiedDetails: text("unified_details"),
     dueDate: date("due_date").notNull(),
     status: invoiceStatusEnum("status").default("PENDING").notNull(),
 
@@ -423,6 +434,33 @@ export const payments = pgTable(
     index("payment_paid_at_idx").on(table.paidAt),
     index("payment_transaction_ref_idx").on(table.transactionReference),
     index("payment_pos_terminal_idx").on(table.posTerminalId),
+  ]
+);
+
+export const classTransfers = pgTable(
+  "class_transfers",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    studentId: uuid("student_id")
+      .notNull()
+      .references(() => students.id, { onDelete: "cascade" }),
+    enrollmentId: uuid("enrollment_id")
+      .references(() => enrollments.id, { onDelete: "set null" }),
+    fromClassId: uuid("from_class_id")
+      .notNull()
+      .references(() => classes.id, { onDelete: "restrict" }),
+    toClassId: uuid("to_class_id")
+      .notNull()
+      .references(() => classes.id, { onDelete: "restrict" }),
+    reason: text("reason"),
+    transferredAt: timestamp("transferred_at").defaultNow().notNull(),
+    transferredBy: uuid("transferred_by")
+      .references(() => users.id, { onDelete: "set null" }),
+  },
+  (table) => [
+    index("transfers_student_idx").on(table.studentId),
+    index("transfers_from_class_idx").on(table.fromClassId),
+    index("transfers_to_class_idx").on(table.toClassId),
   ]
 );
 
@@ -543,6 +581,25 @@ export const paymentsRelations = relations(payments, ({ one }) => ({
   }),
   receiver: one(users, {
     fields: [payments.receivedBy],
+    references: [users.id],
+  }),
+}));
+
+export const classTransfersRelations = relations(classTransfers, ({ one }) => ({
+  student: one(students, {
+    fields: [classTransfers.studentId],
+    references: [students.id],
+  }),
+  fromClass: one(classes, {
+    fields: [classTransfers.fromClassId],
+    references: [classes.id],
+  }),
+  toClass: one(classes, {
+    fields: [classTransfers.toClassId],
+    references: [classes.id],
+  }),
+  transferredByUser: one(users, {
+    fields: [classTransfers.transferredBy],
     references: [users.id],
   }),
 }));

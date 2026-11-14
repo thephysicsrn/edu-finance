@@ -16,6 +16,11 @@ export default async function InvoicesPage() {
       limit: 100,
       with: {
         student: true,
+        enrollment: {
+          with: {
+            class: true,
+          },
+        },
       },
     });
   } catch (error) {
@@ -33,6 +38,9 @@ export default async function InvoicesPage() {
         amount: "250.00",
         discountAmount: "0.00",
         finalAmount: "250.00",
+        tuitionAmount: "0.00",
+        materialAmount: "0.00",
+        isUnified: false,
         dueDate: "2026-11-03",
         status: "PENDING",
         pixCopiaECola:
@@ -43,17 +51,27 @@ export default async function InvoicesPage() {
         student: {
           fullName: "Gabriel Silva Santos",
         },
+        enrollment: {
+          class: {
+            id: "cls-1",
+            name: "Turma Alfa - Medicina (Manhã)",
+          },
+        },
       },
       {
         id: "inv-tut-demo-002",
         installmentNumber: 1,
         totalInstallments: 10,
         invoiceType: "TUITION",
-        amount: "1250.00",
+        amount: "1300.00",
         discountAmount: "125.00",
-        finalAmount: "1125.00",
+        finalAmount: "1175.00",
+        tuitionAmount: "1125.00",
+        materialAmount: "50.00",
+        isUnified: false,
         dueDate: "2026-11-10",
         status: "PENDING",
+        notes: "Mensalidade R$ 1.125,00 + Parcela Material Didático R$ 50,00",
         pixCopiaECola:
           "00020126580014br.gov.bcb.pix0136cursinho-pix@escola.com.br52040000530398654071125.005802BR5916CURSINHO PRO LTDA6009SAO PAULO62140510MENSAL016304F9B3",
         pixQrCodeUrl:
@@ -62,15 +80,25 @@ export default async function InvoicesPage() {
         student: {
           fullName: "Mariana Alencar Silveira",
         },
+        enrollment: {
+          class: {
+            id: "cls-1",
+            name: "Turma Alfa - Medicina (Manhã)",
+          },
+        },
       },
       {
         id: "inv-tut-demo-003",
         installmentNumber: 2,
         totalInstallments: 10,
         invoiceType: "TUITION",
-        amount: "1250.00",
+        amount: "1700.00",
         discountAmount: "0.00",
-        finalAmount: "1250.00",
+        finalAmount: "1700.00",
+        tuitionAmount: "1650.00",
+        materialAmount: "50.00",
+        isUnified: true,
+        unifiedDetails: "Boleto Unificado Multiturma: Medicina (R$ 1.250,00) + Redação (R$ 400,00) + Material (R$ 50,00)",
         dueDate: "2026-10-10",
         status: "OVERDUE",
         pixCopiaECola:
@@ -81,6 +109,12 @@ export default async function InvoicesPage() {
         student: {
           fullName: "Lucas Silveira Santos",
         },
+        enrollment: {
+          class: {
+            id: "cls-1",
+            name: "Turma Alfa - Medicina (Manhã)",
+          },
+        },
       },
       {
         id: "inv-tut-demo-004",
@@ -90,10 +124,19 @@ export default async function InvoicesPage() {
         amount: "680.00",
         discountAmount: "0.00",
         finalAmount: "680.00",
+        tuitionAmount: "680.00",
+        materialAmount: "0.00",
+        isUnified: false,
         dueDate: "2026-10-05",
         status: "PAID",
         student: {
           fullName: "Beatriz Helena Costa",
+        },
+        enrollment: {
+          class: {
+            id: "cls-2",
+            name: "Turma Beta - ITA/IME & Exatas (Tarde)",
+          },
         },
       },
     ];

@@ -41,6 +41,7 @@ export interface EnrollmentReceiptData {
   financial: {
     enrollmentFee: number;
     isFeePaid: boolean;
+    materialFee?: number;
     monthlyPrice: number;
     discountPercent: number;
     discountAmount: number;
@@ -249,6 +250,16 @@ export function EnrollmentReceipt({ data, onClose, isModal = false }: Enrollment
                     ● {data.financial.isFeePaid ? "PAGA / CONFIRMADA" : "PENDENTE DE PAGAMENTO"}
                   </span>
                 </div>
+              </div>
+
+              <div className="p-2.5 rounded border border-slate-200">
+                <span className="text-slate-400 block font-medium">Taxa de Material Didático:</span>
+                <span className="font-bold text-amber-700 print:text-black text-sm">
+                  {formatCurrency(data.financial.materialFee || 0)}
+                </span>
+                <span className="text-[10px] text-slate-500 block">
+                  Apostilas & Livros (separado contabilmente)
+                </span>
               </div>
 
               <div className="p-2.5 rounded border border-slate-200">
