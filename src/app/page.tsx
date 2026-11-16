@@ -7,6 +7,7 @@ import { HeroInteractiveMesh } from "@/components/landing/hero-interactive-mesh"
 import { HeroMockup3D } from "@/components/landing/hero-mockup-3d";
 import { RoleProfilesShowcase } from "@/components/landing/role-profiles-showcase";
 import { OperationalJourneyShowcase } from "@/components/landing/operational-journey-showcase";
+import { PartnersSection } from "@/components/landing/partners-section";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -164,91 +165,7 @@ export default async function LandingPage() {
         {/* ============================================================== */}
         {/* 4. SEÇÃO PARCEIROS & REDE DE CURSINHOS (ACESSO DIRETO AO CALL) */}
         {/* ============================================================== */}
-        <section id="parceiros" className="py-24 sm:py-32 bg-slate-50 border-t border-slate-200 select-none">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-14">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-[#0052ff] border border-blue-200/60 uppercase tracking-wider mb-3">
-                <Sparkles className="h-3.5 w-3.5 text-[#00c878]" />
-                Instituições Conectadas
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-[#07132c] tracking-tight">
-                Nossos Parceiros
-              </h2>
-              <p className="mt-2 text-sm sm:text-base text-slate-600">
-                Selecione seu cursinho para entrar diretamente no sistema da instituição.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {/* CARD DESTAQUE: CALL CURSOS ISOLADOS */}
-              <Link
-                href="/call"
-                className="group relative bg-white border-2 border-blue-200 hover:border-[#0052ff] rounded-2xl p-6 sm:p-7 shadow-md hover:shadow-xl transition-all duration-200 flex flex-col justify-between overflow-hidden cursor-pointer"
-              >
-                <div className="absolute top-3.5 right-3.5 flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Ambiente Ativo
-                </div>
-
-                <div>
-                  <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 p-2 shadow-xs mb-4 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                    <img
-                      src="/call-logo.png"
-                      alt="Call Cursos Isolados"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-
-                  <h3 className="text-xl font-black text-[#07132c] group-hover:text-[#0052ff] transition-colors">
-                    Call Cursos Isolados
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                    Natal • RN • Unidade Presencial
-                  </p>
-                  <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
-                    Preparatório de alta performance para o ENEM, vestibulares de Medicina e turmas isoladas de excelência.
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#0052ff] group-hover:translate-x-1 transition-transform flex items-center gap-1.5">
-                    <span>Acessar Sistema do Call</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-medium">
-                    url/call
-                  </span>
-                </div>
-              </Link>
-
-              {/* CARD SEJA UM PARCEIRO */}
-              <a
-                href="#contato"
-                className="group relative bg-slate-100/70 hover:bg-slate-100 border-2 border-dashed border-slate-300 hover:border-[#0052ff] rounded-2xl p-6 sm:p-7 transition-all duration-200 flex flex-col justify-between cursor-pointer"
-              >
-                <div>
-                  <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 text-slate-400 group-hover:text-[#0052ff] mb-4 flex items-center justify-center group-hover:scale-105 transition-all duration-200">
-                    <School className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-800 group-hover:text-[#0052ff] transition-colors">
-                    Sua Instituição Aqui
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                    Faça parte da rede Edu.Finance
-                  </p>
-                  <p className="text-xs text-slate-500 mt-2.5 leading-relaxed">
-                    Modernize o financeiro, automatize mensalidades via Asaas e reduza a inadimplência no seu cursinho ou colégio.
-                  </p>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs font-bold text-slate-600 group-hover:text-[#0052ff]">
-                  <span>Quero Ser um Parceiro</span>
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </a>
-            </div>
-          </div>
-        </section>
+        <PartnersSection />
 
         {/* ============================================================== */}
         {/* 5. JORNADA OPERACIONAL INTEGRADA                               */}
