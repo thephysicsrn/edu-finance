@@ -54,13 +54,16 @@ export interface StudentItem {
 interface StudentsTableProps {
   initialStudents: StudentItem[];
   availableClasses: AvailableClassOption[];
+  initialClassFilter?: string;
 }
 
 export function StudentsTable({
   initialStudents,
   availableClasses,
+  initialClassFilter = "ALL",
 }: StudentsTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClassFilter, setSelectedClassFilter] = useState<string>(initialClassFilter);
   const [activeTransferModal, setActiveTransferModal] = useState<{
     student: {
       id: string;
@@ -76,23 +79,48 @@ export function StudentsTable({
     const nameMatch = st.fullName.toLowerCase().includes(term);
     const cpfMatch = (st.cpf || "").replace(/\D/g, "").includes(term.replace(/\D/g, ""));
     const guardianMatch = (st.guardian?.fullName || "").toLowerCase().includes(term);
-    return nameMatch || cpfMatch || guardianMatch;
+    const matchesSearch = nameMatch || cpfMatch || guardianMatch;
+
+    const matchesClass =
+      selectedClassFilter === "ALL" ||
+      st.enrollments?.some(
+        (e) =>
+          e.classId === selectedClassFilter ||
+          e.class?.id === selectedClassFilter
+      );
+
+    return matchesSearch && matchesClass;
   });
 
   return (
     <div className="space-y-4">
       {/* Barra de Busca e Filtro */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="w-full sm:w-80 relative">
-          <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <Input
-            placeholder="Buscar por aluno, CPF ou responsável..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9 h-9 text-xs"
-          />
+        <div className="flex flex-1 flex-col sm:flex-row items-center gap-3 w-full">
+          <div className="w-full sm:w-80 relative">
+            <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <Input
+              placeholder="Buscar por aluno, CPF ou responsável..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 h-9 text-xs"
+            />
+          </div>
+
+          <select
+            value={selectedClassFilter}
+            onChange={(e) => setSelectedClassFilter(e.target.value)}
+            className="w-full sm:w-auto h-9 rounded-md border border-slate-200 bg-white px-3 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+          >
+            <option value="ALL">Todas as Turmas ({initialStudents.length} alunos)</option>
+            {availableClasses.map((cls) => (
+              <option key={cls.id} value={cls.id}>
+                {cls.name}
+              </option>
+            ))}
+          </select>
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 whitespace-nowrap">
           Exibindo <span className="font-semibold text-slate-800">{filteredStudents.length}</span> alunos
         </p>
       </div>

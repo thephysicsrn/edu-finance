@@ -8,7 +8,14 @@ import { StudentsTable } from "@/modules/academic/components/students-table";
 
 export const dynamic = "force-dynamic";
 
-export default async function StudentsPage() {
+export default async function StudentsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ classId?: string }>;
+}) {
+  const params = await searchParams;
+  const initialClassFilter = params?.classId || "ALL";
+
   let studentList: any[] = [];
   let availableClasses: any[] = [];
 
@@ -170,6 +177,7 @@ export default async function StudentsPage() {
           <StudentsTable
             initialStudents={studentList}
             availableClasses={availableClasses}
+            initialClassFilter={initialClassFilter}
           />
         </CardContent>
       </Card>

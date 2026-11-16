@@ -3,6 +3,7 @@ import { formatCurrency, formatPhone, formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ExportDefaultersCsvButton } from "@/modules/financial/components/export-defaulters-csv-button";
 import {
   Table,
   TableBody,
@@ -48,10 +49,7 @@ export default async function DefaultersPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2">
-            <FileSpreadsheet className="h-4 w-4" />
-            Exportar Cobrança (CSV)
-          </Button>
+          <ExportDefaultersCsvButton defaulters={defaulters} />
         </div>
       </div>
 
