@@ -21,12 +21,23 @@ import {
   School,
   Layers,
   KeyRound,
+  Pencil,
+  Ban,
+  CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
 import {
   TransferClassModal,
   AvailableClassOption,
 } from "./transfer-class-modal";
+import {
+  EditStudentModal,
+  StudentEditData,
+} from "./edit-student-modal";
+import {
+  CancelEnrollmentModal,
+  CancelEnrollmentData,
+} from "./cancel-enrollment-modal";
 
 export interface StudentItem {
   id: string;
@@ -35,14 +46,24 @@ export interface StudentItem {
   birthDate: string;
   email?: string | null;
   phone?: string | null;
+  address?: string | null;
+  notes?: string | null;
   guardian?: {
+    id?: string;
     fullName: string;
+    cpf?: string;
+    email?: string;
     phone: string;
+    relationship?: string;
+    address?: string | null;
   } | null;
   enrollments?: Array<{
     id: string;
+    enrollmentNumber?: string;
     status: string;
     classId?: string;
+    cancelledAt?: string | null;
+    cancellationReason?: string | null;
     class?: {
       id: string;
       name: string;
@@ -64,6 +85,8 @@ export function StudentsTable({
 }: StudentsTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedClassFilter, setSelectedClassFilter] = useState<string>(initialClassFilter);
+
+  // Modais de Ação
   const [activeTransferModal, setActiveTransferModal] = useState<{
     student: {
       id: string;
@@ -73,6 +96,9 @@ export function StudentsTable({
       currentClassName: string;
     };
   } | null>(null);
+
+  const [activeEditModal, setActiveEditModal] = useState<StudentEditData | null>(null);
+  const [activeCancelModal, setActiveCancelModal] = useState<CancelEnrollmentData | null>(null);
 
   const filteredStudents = initialStudents.filter((st) => {
     const term = searchTerm.toLowerCase();
@@ -110,7 +136,7 @@ export function StudentsTable({
           <select
             value={selectedClassFilter}
             onChange={(e) => setSelectedClassFilter(e.target.value)}
-            className="w-full sm:w-auto h-9 rounded-md border border-slate-200 bg-white px-3 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full sm:w-auto h-9 rounded-md border border-slate-200 bg-white px-3 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 font-medium"
           >
             <option value="ALL">Todas as Turmas ({initialStudents.length} alunos)</option>
             {availableClasses.map((cls) => (
@@ -130,14 +156,14 @@ export function StudentsTable({
           Nenhum aluno encontrado para os critérios de busca.
         </div>
       ) : (
-        <div className="rounded-xl border border-slate-200 overflow-hidden">
+        <div className="rounded-xl border border-slate-200 overflow-hidden shadow-2xs">
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow>
                 <TableHead>Nome do Aluno</TableHead>
                 <TableHead>CPF / Nascimento</TableHead>
                 <TableHead>Responsável Legal</TableHead>
-                <TableHead>Turmas Vinculadas</TableHead>
+                <TableHead>Turma(s) Matriculada(s)</TableHead>
                 <TableHead className="text-center">Status</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
@@ -145,37 +171,75 @@ export function StudentsTable({
             <TableBody>
               {filteredStudents.map((st) => {
                 const activeEnrollments = (st.enrollments || []).filter(
-                  (e) => e.status === "ACTIVE" || e.status === "PENDING_PAYMENT"
+                  (en) => en.status === "ACTIVE"
                 );
-                const primaryEnrollment = activeEnrollments[0] || st.enrollments?.[0];
+                const primaryEnrollment = st.enrollments?.[0];
                 const isMultiClass = activeEnrollments.length > 1;
+
+                const isCancelled = primaryEnrollment?.status === "CANCELLED";
 
                 return (
                   <TableRow key={st.id} className="hover:bg-slate-50/70">
                     <TableCell>
-                      <p className="font-semibold text-slate-900">{st.fullName}</p>
-                      <p className="text-xs text-slate-500">{st.email || "Sem e-mail cadastrado"}</p>
-                    </TableCell>
-
-                    <TableCell className="text-xs font-mono">
-                      <p>{formatCPF(st.cpf)}</p>
-                      <p className="text-slate-400">{formatDate(st.birthDate)}</p>
+                      <div className="flex items-center gap-2">
+                        <div>
+                          <p className="font-semibold text-slate-900 text-sm flex items-center gap-1.5">
+                            {st.fullName}
+                            {isMultiClass && (
+                              <Badge
+                                variant="outline"
+                                className="bg-indigo-50 text-indigo-700 border-indigo-200 text-[10px] py-0 px-1.5"
+                              >
+                                {activeEnrollments.length} cursinhos
+                              </Badge>
+                            )}
+                          </p>
+                          {st.phone && (
+                            <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                              <Phone className="h-3 w-3" />
+                              {formatPhone(st.phone)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
                     </TableCell>
 
                     <TableCell>
-                      <p className="text-sm font-medium text-slate-800">
-                        {st.guardian?.fullName || "Não informado"}
+                      <p className="font-mono text-xs text-slate-700">
+                        {formatCPF(st.cpf)}
                       </p>
-                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                        <Phone className="h-3 w-3" />
-                        {formatPhone(st.guardian?.phone)}
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {formatDate(st.birthDate)}
                       </p>
+                    </TableCell>
+
+                    <TableCell>
+                      <p className="text-xs font-medium text-slate-800">
+                        {st.guardian?.fullName || (
+                          <span className="text-slate-400 italic">O próprio aluno</span>
+                        )}
+                      </p>
+                      {st.guardian?.phone && (
+                        <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                          <Phone className="h-3 w-3" />
+                          {formatPhone(st.guardian.phone)}
+                        </p>
+                      )}
                     </TableCell>
 
                     {/* Turmas Vinculadas (Suporta Multiturma / Múltiplos Cursinhos) */}
                     <TableCell>
                       {activeEnrollments.length === 0 ? (
-                        <span className="text-xs text-slate-400 italic">Sem turma ativa</span>
+                        <div className="space-y-1">
+                          <span className="text-xs text-slate-400 italic">
+                            {isCancelled ? "Matrícula Cancelada" : "Sem turma ativa"}
+                          </span>
+                          {primaryEnrollment?.cancellationReason && (
+                            <p className="text-[11px] text-rose-600/80">
+                              Motivo: {primaryEnrollment.cancellationReason}
+                            </p>
+                          )}
+                        </div>
                       ) : (
                         <div className="space-y-1">
                           {activeEnrollments.map((en) => (
@@ -199,18 +263,40 @@ export function StudentsTable({
                         variant={
                           primaryEnrollment?.status === "ACTIVE"
                             ? "success"
+                            : primaryEnrollment?.status === "CANCELLED"
+                            ? "destructive"
+                            : primaryEnrollment?.status === "SUSPENDED"
+                            ? "warning"
                             : "secondary"
                         }
                       >
-                        {primaryEnrollment?.status || "PENDENTE"}
+                        {primaryEnrollment?.status === "ACTIVE"
+                          ? "Ativa"
+                          : primaryEnrollment?.status === "CANCELLED"
+                          ? "Cancelada"
+                          : primaryEnrollment?.status === "SUSPENDED"
+                          ? "Trancada"
+                          : "Pendente"}
                       </Badge>
                     </TableCell>
 
-                    {/* Ações: Transferência de Turma e Comprovante */}
+                    {/* Ações: Editar, Transferência, Folha do Pai, Comprovante e Cancelar */}
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        {/* Botão de Transferência de Turma */}
-                        {primaryEnrollment && primaryEnrollment.class && (
+                        {/* Botão de Edição de Dados */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setActiveEditModal(st)}
+                          className="h-8 gap-1 text-xs text-slate-700 hover:text-slate-900 border-slate-200 hover:bg-slate-50"
+                          title="Editar dados cadastrais do aluno e responsável"
+                        >
+                          <Pencil className="h-3.5 w-3.5 text-slate-500" />
+                          Editar
+                        </Button>
+
+                        {/* Botão de Transferência de Turma (Apenas para matrículas ativas) */}
+                        {primaryEnrollment && primaryEnrollment.class && primaryEnrollment.status === "ACTIVE" && (
                           <Button
                             variant="outline"
                             size="sm"
@@ -268,6 +354,27 @@ export function StudentsTable({
                             </Button>
                           </Link>
                         )}
+
+                        {/* Botão de Cancelar Matrícula (Se estiver ativa) */}
+                        {primaryEnrollment && primaryEnrollment.status === "ACTIVE" && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              setActiveCancelModal({
+                                enrollmentId: primaryEnrollment.id,
+                                enrollmentNumber: primaryEnrollment.enrollmentNumber || "MAT",
+                                studentName: st.fullName,
+                                className: primaryEnrollment.class?.name || "Turma Geral",
+                              })
+                            }
+                            className="h-8 gap-1 text-xs text-rose-700 hover:text-rose-800 border-rose-200 hover:bg-rose-50"
+                            title="Cancelar vínculo de matrícula deste aluno"
+                          >
+                            <Ban className="h-3.5 w-3.5 text-rose-500" />
+                            Cancelar
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -285,6 +392,30 @@ export function StudentsTable({
           onClose={() => setActiveTransferModal(null)}
           student={activeTransferModal.student}
           availableClasses={availableClasses}
+          onSuccess={() => {
+            window.location.reload();
+          }}
+        />
+      )}
+
+      {/* Modal de Edição de Dados Cadastrais */}
+      {activeEditModal && (
+        <EditStudentModal
+          isOpen={true}
+          onClose={() => setActiveEditModal(null)}
+          student={activeEditModal}
+          onSuccess={() => {
+            window.location.reload();
+          }}
+        />
+      )}
+
+      {/* Modal de Cancelamento de Matrícula */}
+      {activeCancelModal && (
+        <CancelEnrollmentModal
+          isOpen={true}
+          onClose={() => setActiveCancelModal(null)}
+          data={activeCancelModal}
           onSuccess={() => {
             window.location.reload();
           }}
