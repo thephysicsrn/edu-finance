@@ -24,6 +24,7 @@ import {
   Pencil,
   Ban,
   CheckCircle2,
+  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -351,6 +352,24 @@ export function StudentsTable({
                             >
                               <Printer className="h-3.5 w-3.5" />
                               Comprovante
+                            </Button>
+                          </Link>
+                        )}
+
+                        {/* Botão de Carnê de Pagamento para Impressão */}
+                        {primaryEnrollment && (
+                          <Link
+                            href={`/academic/enrollments/${primaryEnrollment.id}/carne`}
+                            target="_blank"
+                            title="Gerar e Imprimir Carnê de Mensalidades com QR Code PIX e Código de Barras"
+                          >
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-8 gap-1 text-xs text-indigo-700 hover:text-indigo-800 border-indigo-300 hover:bg-indigo-50 font-semibold"
+                            >
+                              <BookOpen className="h-3.5 w-3.5 text-indigo-600" />
+                              Carnê
                             </Button>
                           </Link>
                         )}

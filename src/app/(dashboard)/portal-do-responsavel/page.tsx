@@ -56,19 +56,26 @@ export default async function GuardianPortalPage() {
         },
       });
 
-      studentsData = studentsList.map((st) => ({
-        id: st.id,
-        fullName: st.fullName,
-        cpf: st.cpf,
-        classes: (st.enrollments || [])
-          .filter((e) => e.status === "ACTIVE" || e.status === "PENDING_PAYMENT")
-          .map((e) => ({
-            id: e.class.id,
-            name: e.class.name,
-            shift: e.class.shift,
-            courseName: e.class.course?.name || "Preparatório Geral",
-          })),
-      }));
+      studentsData = studentsList.map((st) => {
+        const primaryEnrollment = (st.enrollments || []).find(
+          (e) => e.status === "ACTIVE" || e.status === "PENDING_PAYMENT"
+        ) || st.enrollments?.[0];
+
+        return {
+          id: st.id,
+          fullName: st.fullName,
+          cpf: st.cpf,
+          enrollmentId: primaryEnrollment?.id || null,
+          classes: (st.enrollments || [])
+            .filter((e) => e.status === "ACTIVE" || e.status === "PENDING_PAYMENT")
+            .map((e) => ({
+              id: e.class.id,
+              name: e.class.name,
+              shift: e.class.shift,
+              courseName: e.class.course?.name || "Preparatório Geral",
+            })),
+        };
+      });
 
       // 3. Busca faturas vinculadas aos alunos deste responsável
       const studentIds = studentsList.map((s) => s.id);
@@ -92,6 +99,7 @@ export default async function GuardianPortalPage() {
 
         invoicesData = guardianInvoices.map((inv) => ({
           id: inv.id,
+          enrollmentId: inv.enrollmentId,
           installmentNumber: inv.installmentNumber,
           totalInstallments: inv.totalInstallments,
           invoiceType: inv.invoiceType,
@@ -132,6 +140,7 @@ export default async function GuardianPortalPage() {
         id: "demo-st-1",
         fullName: "Lucas Silveira Santos",
         cpf: "98765432100",
+        enrollmentId: "88888888-8888-8888-8888-888888888801",
         classes: [
           {
             id: "cls-1",
@@ -152,6 +161,7 @@ export default async function GuardianPortalPage() {
     invoicesData = [
       {
         id: "inv-demo-nov-2026",
+        enrollmentId: "88888888-8888-8888-8888-888888888801",
         installmentNumber: 1,
         totalInstallments: 10,
         invoiceType: "TUITION",

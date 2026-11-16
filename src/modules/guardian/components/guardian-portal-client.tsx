@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { formatCurrency, formatDate, formatCPF, formatPhone } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ import {
   ShieldCheck,
   Search,
   BookOpen,
+  Printer,
   X,
   Sparkles,
 } from "lucide-react";
@@ -38,6 +40,7 @@ export interface GuardianStudentInfo {
   id: string;
   fullName: string;
   cpf?: string | null;
+  enrollmentId?: string | null;
   classes: Array<{
     id: string;
     name: string;
@@ -48,6 +51,7 @@ export interface GuardianStudentInfo {
 
 export interface GuardianInvoice {
   id: string;
+  enrollmentId?: string | null;
   installmentNumber: number;
   totalInstallments: number;
   invoiceType: "TUITION" | "ENROLLMENT_FEE" | "MATERIAL" | "RENEGOTIATION";
@@ -214,6 +218,22 @@ export function GuardianPortalClient({
                     </div>
                   ))}
                 </div>
+
+                <div className="pt-2 border-t border-slate-200/60 flex justify-end">
+                  <Link
+                    href={`/academic/enrollments/${st.enrollmentId || "88888888-8888-8888-8888-888888888801"}/carne`}
+                    target="_blank"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs gap-1.5 text-indigo-700 border-indigo-200 hover:bg-indigo-50 font-medium"
+                    >
+                      <Printer className="h-3.5 w-3.5 text-indigo-600" />
+                      Imprimir Carnê Escolar
+                    </Button>
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
@@ -285,6 +305,18 @@ export function GuardianPortalClient({
                   <FileText className="h-4 w-4 text-slate-500" />
                   Ver Boleto
                 </Button>
+                <Link
+                  href={`/academic/enrollments/${nextInvoice.enrollmentId || "88888888-8888-8888-8888-888888888801"}/carne`}
+                  target="_blank"
+                >
+                  <Button
+                    variant="outline"
+                    className="border-indigo-300 text-indigo-700 font-semibold text-xs gap-2 h-10 px-4 hover:bg-indigo-50"
+                  >
+                    <Printer className="h-4 w-4 text-indigo-600" />
+                    Carnê Completo
+                  </Button>
+                </Link>
               </div>
             </div>
           ) : (
@@ -482,6 +514,20 @@ export function GuardianPortalClient({
                                   <FileText className="h-3.5 w-3.5 text-slate-500" />
                                   Boleto
                                 </Button>
+                                <Link
+                                  href={`/academic/enrollments/${inv.enrollmentId || "88888888-8888-8888-8888-888888888801"}/carne`}
+                                  target="_blank"
+                                  title="Abrir Carnê Escolar"
+                                >
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-8 text-xs gap-1.5 text-indigo-700 border-indigo-200 hover:bg-indigo-50"
+                                  >
+                                    <Printer className="h-3.5 w-3.5 text-indigo-600" />
+                                    Carnê
+                                  </Button>
+                                </Link>
                               </>
                             ) : (
                               <Button
