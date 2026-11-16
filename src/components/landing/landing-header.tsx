@@ -27,13 +27,14 @@ export function LandingHeader({ user }: LandingHeaderProps) {
 
   const navLinks = [
     { name: "Início", href: "#inicio" },
-    { name: "Sobre Nós", href: "#sobre" },
+    { name: "Parceiros", href: "#parceiros" },
     { name: "Módulos & Recursos", href: "#modulos" },
     { name: "Cobrança Asaas", href: "#asaas" },
+    { name: "Sobre Nós", href: "#sobre" },
     { name: "Fale Conosco", href: "#contato" },
   ];
 
-  const destinationHref = user ? "/dashboard" : "/login";
+  const destinationHref = user ? "/dashboard" : "/call";
 
   return (
     <header className="w-full select-none">
@@ -72,7 +73,7 @@ export function LandingHeader({ user }: LandingHeaderProps) {
               </Link>
             ) : (
               <Link
-                href="/login"
+                href="/call"
                 className="flex items-center gap-2 bg-white/10 hover:bg-white hover:text-[#07132c] active:bg-slate-100 text-white border border-white/25 font-semibold text-xs px-4 py-1.5 rounded-md transition-all duration-150 shadow-xs group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                 id="area-do-cliente-btn"
               >

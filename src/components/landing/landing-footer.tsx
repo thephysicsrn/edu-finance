@@ -31,6 +31,11 @@ export function LandingFooter() {
                 </a>
               </li>
               <li>
+                <a href="#parceiros" className="hover:text-[#0052ff] transition-colors font-semibold text-blue-600">
+                  Parceiros & Clientes
+                </a>
+              </li>
+              <li>
                 <a href="#sobre" className="hover:text-[#0052ff] transition-colors">
                   Sobre a Edu.Finance
                 </a>
