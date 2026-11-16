@@ -16,6 +16,8 @@ export interface CarneSlipData {
   tuitionAmount?: number | null;
   materialAmount?: number | null;
   status: string;
+  gateway?: string | null;
+  gatewayPaymentUrl?: string | null;
   pixCopiaECola?: string | null;
   pixQrCodeUrl?: string | null;
   barcode?: string | null;

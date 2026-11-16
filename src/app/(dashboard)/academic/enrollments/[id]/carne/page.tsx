@@ -119,6 +119,8 @@ export default async function EnrollmentCarnePage({ params }: CarnePageProps) {
     tuitionAmount: inv.tuitionAmount ? Number(inv.tuitionAmount) : null,
     materialAmount: inv.materialAmount ? Number(inv.materialAmount) : null,
     status: inv.status,
+    gateway: inv.gateway,
+    gatewayPaymentUrl: inv.gatewayPaymentUrl,
     pixCopiaECola: inv.pixCopiaECola,
     pixQrCodeUrl: inv.pixQrCodeUrl,
     barcode: inv.barcode,

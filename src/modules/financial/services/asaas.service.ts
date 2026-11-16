@@ -209,5 +209,31 @@ export class AsaasService {
       method: "DELETE",
     });
   }
+
+  /**
+   * 6. Busca detalhes de uma cobrança no Asaas por ID (pay_...)
+   */
+  static async getPayment(paymentId: string): Promise<AsaasPaymentResponse> {
+    return await this.request<AsaasPaymentResponse>(`/payments/${paymentId}`);
+  }
+
+  /**
+   * 7. Consulta cobranças filtradas por externalReference ou status
+   */
+  static async listPayments(params: {
+    customer?: string;
+    externalReference?: string;
+    status?: string;
+    limit?: number;
+  }): Promise<{ data: AsaasPaymentResponse[]; totalCount: number; hasMore: boolean }> {
+    const query = new URLSearchParams();
+    if (params.customer) query.set("customer", params.customer);
+    if (params.externalReference) query.set("externalReference", params.externalReference);
+    if (params.status) query.set("status", params.status);
+    if (params.limit) query.set("limit", String(params.limit));
+
+    const endpoint = `/payments?${query.toString()}`;
+    return await this.request<{ data: AsaasPaymentResponse[]; totalCount: number; hasMore: boolean }>(endpoint);
+  }
 }
 

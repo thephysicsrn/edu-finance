@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { invoices, payments, enrollments } from "@/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, inArray } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { AsaasService } from "./asaas.service";
 
 export interface ChargeCustomerInfo {
@@ -13,6 +14,7 @@ export interface ChargeCustomerInfo {
 }
 
 export interface GeneratedChargeResult {
+  gateway: "ASAAS" | "ASAAS_SIMULATED";
   gatewayInvoiceId: string;
   gatewayPaymentUrl: string;
   pixCopiaECola: string;
@@ -88,6 +90,7 @@ export class BillingGatewayService {
         }
 
         const result: GeneratedChargeResult = {
+          gateway: "ASAAS",
           gatewayInvoiceId: payment.id,
           gatewayPaymentUrl: payment.invoiceUrl || payment.bankSlipUrl || "",
           pixCopiaECola,
@@ -135,6 +138,7 @@ export class BillingGatewayService {
     )}`;
 
     const result: GeneratedChargeResult = {
+      gateway: "ASAAS_SIMULATED",
       gatewayInvoiceId: `ASAAS_SIM_${Date.now()}_${txid.slice(0, 8)}`,
       gatewayPaymentUrl: `https://faturas.cursinhopro.com.br/pay/${invoice.id}`,
       pixCopiaECola,
@@ -275,5 +279,167 @@ export class BillingGatewayService {
     }
 
     return { success: true, ignored: true, message: `Evento ${event} não exigiu alteração de status.` };
+  }
+
+  /**
+   * Sincroniza faturas pendentes com o Asaas (Reconciliação Ativa)
+   * Varre faturas em aberto no banco local e consulta o status em tempo real no Asaas.
+   */
+  static async syncPendingInvoicesWithAsaas(): Promise<{
+    checked: number;
+    updated: number;
+    details: Array<{ invoiceId: string; oldStatus: string; newStatus: string }>;
+  }> {
+    const details: Array<{ invoiceId: string; oldStatus: string; newStatus: string }> = [];
+
+    const targetInvoices = await db.query.invoices.findMany({
+      where: and(
+        inArray(invoices.status, ["PENDING", "OVERDUE"]),
+        sql`${invoices.gatewayInvoiceId} is not null`
+      ),
+      limit: 100,
+    });
+
+    if (targetInvoices.length === 0) {
+      return { checked: 0, updated: 0, details: [] };
+    }
+
+    let updatedCount = 0;
+
+    for (const inv of targetInvoices) {
+      if (!inv.gatewayInvoiceId) continue;
+
+      if (AsaasService.isConfigured() && inv.gatewayInvoiceId.startsWith("pay_")) {
+        try {
+          const asaasPayment = await AsaasService.getPayment(inv.gatewayInvoiceId);
+          if (!asaasPayment) continue;
+
+          const asaasStatus = asaasPayment.status?.toUpperCase();
+
+          // Liquidada no Asaas
+          if (
+            (asaasStatus === "RECEIVED" ||
+              asaasStatus === "CONFIRMED" ||
+              asaasStatus === "RECEIVED_IN_CASH") &&
+            inv.status !== "PAID"
+          ) {
+            await db.transaction(async (tx) => {
+              await tx.insert(payments).values({
+                invoiceId: inv.id,
+                amountPaid: inv.finalAmount,
+                penaltyAmount: "0.00",
+                interestAmount: "0.00",
+                discountGiven: "0.00",
+                totalReceived: Number(asaasPayment.value || inv.finalAmount).toFixed(2),
+                paymentMethod: (asaasPayment.billingType as any) || "PIX",
+                transactionReference: asaasPayment.id,
+                source: "GATEWAY_WEBHOOK",
+                paidAt: asaasPayment.dueDate ? new Date() : new Date(),
+              });
+
+              await tx
+                .update(invoices)
+                .set({
+                  status: "PAID",
+                  lastSyncedAt: new Date(),
+                  updatedAt: new Date(),
+                })
+                .where(eq(invoices.id, inv.id));
+
+              if (inv.invoiceType === "ENROLLMENT_FEE") {
+                await tx
+                  .update(enrollments)
+                  .set({
+                    isFeePaid: true,
+                    status: "ACTIVE",
+                    confirmedAt: new Date(),
+                    updatedAt: new Date(),
+                  })
+                  .where(eq(enrollments.id, inv.enrollmentId));
+              }
+            });
+
+            details.push({ invoiceId: inv.id, oldStatus: inv.status, newStatus: "PAID" });
+            updatedCount++;
+            continue;
+          }
+
+          // Atrasada no Asaas
+          if (asaasStatus === "OVERDUE" && inv.status === "PENDING") {
+            await db
+              .update(invoices)
+              .set({
+                status: "OVERDUE",
+                lastSyncedAt: new Date(),
+                updatedAt: new Date(),
+              })
+              .where(eq(invoices.id, inv.id));
+
+            details.push({ invoiceId: inv.id, oldStatus: "PENDING", newStatus: "OVERDUE" });
+            updatedCount++;
+            continue;
+          }
+
+          // Cancelada/Estornada no Asaas
+          if (
+            (asaasStatus === "DELETED" || asaasStatus === "REFUNDED") &&
+            inv.status !== "CANCELLED"
+          ) {
+            await db
+              .update(invoices)
+              .set({
+                status: "CANCELLED",
+                lastSyncedAt: new Date(),
+                updatedAt: new Date(),
+              })
+              .where(eq(invoices.id, inv.id));
+
+            details.push({ invoiceId: inv.id, oldStatus: inv.status, newStatus: "CANCELLED" });
+            updatedCount++;
+            continue;
+          }
+
+          // Apenas atualiza carimbo de sincronização
+          await db
+            .update(invoices)
+            .set({ lastSyncedAt: new Date() })
+            .where(eq(invoices.id, inv.id));
+        } catch (err) {
+          console.warn(`[Sync Asaas] Falha ao verificar fatura ${inv.id}:`, err);
+        }
+      } else {
+        // Em ambiente sandbox / contingência: sincroniza pelo vencimento
+        const todayStr = new Date().toISOString().split("T")[0];
+        if (inv.dueDate < todayStr && inv.status === "PENDING") {
+          await db
+            .update(invoices)
+            .set({
+              status: "OVERDUE",
+              lastSyncedAt: new Date(),
+              updatedAt: new Date(),
+            })
+            .where(eq(invoices.id, inv.id));
+
+          details.push({ invoiceId: inv.id, oldStatus: "PENDING", newStatus: "OVERDUE" });
+          updatedCount++;
+        }
+      }
+    }
+
+    try {
+      revalidatePath("/financial/invoices");
+      revalidatePath("/financial/defaulters");
+      revalidatePath("/academic/students");
+      revalidatePath("/portal-do-responsavel");
+      revalidatePath("/dashboard");
+    } catch (e) {
+      // Ignora erro de revalidação fora de rota
+    }
+
+    return {
+      checked: targetInvoices.length,
+      updated: updatedCount,
+      details,
+    };
   }
 }

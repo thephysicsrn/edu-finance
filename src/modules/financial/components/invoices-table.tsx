@@ -29,8 +29,10 @@ import {
   ShieldCheck,
   Usb,
   Cpu,
+  RefreshCw,
+  ExternalLink,
 } from "lucide-react";
-import { recordPaymentAction } from "../actions/payment.actions";
+import { recordPaymentAction, syncWithAsaasAction } from "../actions/payment.actions";
 import {
   sendToPosTerminalAction,
   completePosPaymentAction,
@@ -52,6 +54,10 @@ export interface InvoiceItem {
   dueDate: string;
   status: "PENDING" | "PAID" | "OVERDUE" | "CANCELLED";
   invoiceType?: "ENROLLMENT_FEE" | "TUITION" | "MATERIAL" | "RENEGOTIATION";
+  gateway?: string | null;
+  gatewayInvoiceId?: string | null;
+  gatewayPaymentUrl?: string | null;
+  lastSyncedAt?: string | Date | null;
   pixCopiaECola?: string | null;
   pixQrCodeUrl?: string | null;
   barcode?: string | null;
@@ -105,6 +111,29 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
 
   const [copied, setCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSyncingAsaas, setIsSyncingAsaas] = useState(false);
+  const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
+
+  async function handleSyncAsaas() {
+    setIsSyncingAsaas(true);
+    setSyncFeedback(null);
+    try {
+      const res = await syncWithAsaasAction();
+      if (res.success) {
+        setSyncFeedback(res.message || "Sincronização concluída com sucesso.");
+        setTimeout(() => {
+          setSyncFeedback(null);
+          window.location.reload();
+        }, 1500);
+      } else {
+        alert(res.error || "Falha ao sincronizar com o Asaas.");
+      }
+    } catch (e: any) {
+      alert("Erro ao conectar com o serviço de sincronização: " + e?.message);
+    } finally {
+      setIsSyncingAsaas(false);
+    }
+  }
 
   // Formulário de Baixa Manual
   const [paymentForm, setPaymentForm] = useState({
@@ -402,8 +431,33 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
               ))}
             </select>
           )}
+
+          {/* Botão de Sincronização Automática com Asaas */}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleSyncAsaas}
+            disabled={isSyncingAsaas}
+            className="text-xs h-8 gap-1.5 border-indigo-200 text-indigo-700 bg-indigo-50/50 hover:bg-indigo-100 hover:text-indigo-800 font-semibold cursor-pointer shadow-xs"
+            title="Sincronizar baixas e status com a API do Asaas"
+          >
+            {isSyncingAsaas ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin text-indigo-600" />
+            ) : (
+              <RefreshCw className="h-3.5 w-3.5 text-indigo-600" />
+            )}
+            {isSyncingAsaas ? "Sincronizando Asaas..." : "Sincronizar Asaas"}
+          </Button>
         </div>
       </div>
+
+      {/* Alerta de Feedback de Sincronização */}
+      {syncFeedback && (
+        <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-xs flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+          <span>{syncFeedback}</span>
+        </div>
+      )}
 
       {/* Tabela de Faturas */}
       {filteredInvoices.length === 0 ? (
@@ -438,6 +492,15 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
                     {inv.isUnified && (
                       <Badge variant="outline" className="text-[10px] py-0 px-1 bg-blue-50 text-indigo-700 border-indigo-200">
                         Multiturma Unificado
+                      </Badge>
+                    )}
+                    {inv.gatewayInvoiceId && (
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] py-0 px-1.5 bg-blue-50/80 text-blue-700 border-blue-200 font-mono"
+                        title={`Sincronizado com Asaas Gateway: ${inv.gatewayInvoiceId}`}
+                      >
+                        Asaas {inv.gatewayInvoiceId.slice(0, 10)}...
                       </Badge>
                     )}
                   </div>
@@ -506,6 +569,24 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
                       <QrCode className="h-3.5 w-3.5 text-indigo-600" />
                       PIX
                     </Button>
+
+                    {/* Link direto Asaas */}
+                    {inv.gatewayPaymentUrl && (
+                      <a
+                        href={inv.gatewayPaymentUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Abrir Cobrança Direta no Asaas"
+                      >
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        >
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </Button>
+                      </a>
+                    )}
 
                     {/* Botão Maquininha (Wi-Fi ou USB) */}
                     {inv.status !== "PAID" && (

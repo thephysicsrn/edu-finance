@@ -1,14 +1,12 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db";
-import { invoices } from "@/db/schema";
-import { eq, and, sql } from "drizzle-orm";
 import { syncOverdueInvoicesStatus } from "@/modules/financial/queries/defaulters.queries";
+import { BillingGatewayService } from "@/modules/financial/services/billing-gateway.service";
 
 export const dynamic = "force-dynamic";
 
 /**
  * Job de Sincronização Periódica de Faturas (Billing Sync & Overdue Job)
- * Realiza a reconciliação e a virada de status das mensalidades e taxas de matrícula.
+ * Realiza a reconciliação e a virada de status das mensalidades e taxas de matrícula com o Asaas.
  */
 export async function GET(request: Request) {
   try {
@@ -20,20 +18,16 @@ export async function GET(request: Request) {
     // 1. Atualiza parcelas vencidas (PENDING -> OVERDUE onde dueDate < hoje)
     const overdueResult = await syncOverdueInvoicesStatus();
 
-    // 2. Busca faturas pendentes com gateway associado para reconciliação
-    const pendingWithGateway = await db.query.invoices.findMany({
-      where: and(
-        eq(invoices.status, "PENDING"),
-        sql`${invoices.gatewayInvoiceId} is not null`
-      ),
-      limit: 50,
-    });
+    // 2. Reconciliação direta com a API do Asaas
+    const gatewaySyncResult = await BillingGatewayService.syncPendingInvoicesWithAsaas();
 
     return NextResponse.json({
       success: true,
       message: "Sincronização de cobranças e faturas executada com sucesso.",
       overdueInvoicesUpdated: overdueResult.count,
-      gatewayInvoicesChecked: pendingWithGateway.length,
+      gatewayInvoicesChecked: gatewaySyncResult.checked,
+      gatewayInvoicesUpdated: gatewaySyncResult.updated,
+      details: gatewaySyncResult.details,
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {

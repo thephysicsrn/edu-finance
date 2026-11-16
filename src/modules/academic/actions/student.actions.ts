@@ -6,6 +6,7 @@ import { eq, and, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { AsaasService } from "@/modules/financial/services/asaas.service";
 
 // Schema de Atualização de Dados do Aluno e Responsável
 const updateStudentSchema = z.object({
@@ -168,7 +169,7 @@ export async function cancelEnrollmentAction(input: CancelEnrollmentInput) {
             eq(invoices.enrollmentId, validated.enrollmentId),
             inArray(invoices.status, statusesToCancel)
           ),
-          columns: { id: true },
+          columns: { id: true, gatewayInvoiceId: true },
         });
 
         if (targetInvoices.length > 0) {
@@ -181,6 +182,19 @@ export async function cancelEnrollmentAction(input: CancelEnrollmentInput) {
               updatedAt: new Date(),
             })
             .where(inArray(invoices.id, ids));
+
+          // Cancela também no Asaas para cessar cobranças automáticas por e-mail/SMS
+          if (AsaasService.isConfigured()) {
+            for (const inv of targetInvoices) {
+              if (inv.gatewayInvoiceId && inv.gatewayInvoiceId.startsWith("pay_")) {
+                try {
+                  await AsaasService.deletePayment(inv.gatewayInvoiceId);
+                } catch (delErr) {
+                  console.warn(`[Asaas] Erro ao deletar cobrança ${inv.gatewayInvoiceId} no Asaas:`, delErr);
+                }
+              }
+            }
+          }
 
           cancelledInvoicesCount = targetInvoices.length;
         }

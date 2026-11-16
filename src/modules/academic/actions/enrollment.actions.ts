@@ -313,6 +313,7 @@ export async function createEnrollmentAction(
         await tx
           .update(invoices)
           .set({
+            gateway: feeCharge.gateway,
             gatewayInvoiceId: feeCharge.gatewayInvoiceId,
             gatewayPaymentUrl: feeCharge.gatewayPaymentUrl,
             pixCopiaECola: feeCharge.pixCopiaECola,
@@ -373,6 +374,7 @@ export async function createEnrollmentAction(
         await tx
           .update(invoices)
           .set({
+            gateway: matCharge.gateway,
             gatewayInvoiceId: matCharge.gatewayInvoiceId,
             gatewayPaymentUrl: matCharge.gatewayPaymentUrl,
             pixCopiaECola: matCharge.pixCopiaECola,
@@ -479,15 +481,15 @@ export async function createEnrollmentAction(
         }
 
         // Fatura regular desta turma (ou primeira do mês)
+        const invoiceId = crypto.randomUUID();
         const finalInstallmentTotal = Number((finalMonthlyTuition + monthlyMaterialRate).toFixed(2));
-        const tempId = `INV-${newEnrollment.id.slice(0, 8)}-${i + 1}`;
         const chargeDesc = monthlyMaterialRate > 0
           ? `Mensalidade ${i + 1}/${totalInstallments} (${course.name}) + Material Didático`
           : `Mensalidade ${i + 1}/${totalInstallments} - ${course.name}`;
 
         const charge = await BillingGatewayService.createCharge(
           {
-            id: tempId,
+            id: invoiceId,
             description: chargeDesc,
             finalAmount: finalInstallmentTotal,
             dueDate: dueDateString,
@@ -498,10 +500,12 @@ export async function createEnrollmentAction(
             cpf: data.guardian.cpf,
             email: data.guardian.email,
             phone: data.guardian.phone,
+            address: data.guardian.address,
           }
         );
 
         invoiceRecords.push({
+          id: invoiceId,
           enrollmentId: newEnrollment.id,
           studentId,
           invoiceType: "TUITION" as const,
@@ -516,7 +520,7 @@ export async function createEnrollmentAction(
           unifiedDetails: null,
           dueDate: dueDateString,
           status: "PENDING" as const,
-          gateway: "INTERNAL",
+          gateway: charge.gateway,
           gatewayInvoiceId: charge.gatewayInvoiceId,
           gatewayPaymentUrl: charge.gatewayPaymentUrl,
           pixCopiaECola: charge.pixCopiaECola,

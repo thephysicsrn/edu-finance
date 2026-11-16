@@ -169,4 +169,38 @@ export async function generateAsaasChargeAction(invoiceId: string) {
   }
 }
 
+/**
+ * Server Action para sincronizar em lote todas as faturas pendentes com o Asaas
+ * Reconcilia baixas de PIX, Boletos e Atualizações de Status
+ */
+export async function syncWithAsaasAction() {
+  const session = await auth();
+  if (!session?.user) {
+    return { success: false, error: "Acesso negado: Usuário não autenticado." };
+  }
+
+  try {
+    const syncResult = await BillingGatewayService.syncPendingInvoicesWithAsaas();
+
+    revalidatePath("/financial/invoices");
+    revalidatePath("/financial/defaulters");
+    revalidatePath("/financial/cashflow");
+    revalidatePath("/academic/students");
+    revalidatePath("/portal-do-responsavel");
+    revalidatePath("/dashboard");
+
+    return {
+      success: true,
+      message: `Sincronização concluída com o Asaas! ${syncResult.checked} faturas verificadas e ${syncResult.updated} atualizadas com sucesso.`,
+      data: syncResult,
+    };
+  } catch (error: any) {
+    console.error("[syncWithAsaasAction error]:", error);
+    return {
+      success: false,
+      error: error?.message || "Erro durante a sincronização com o Asaas.",
+    };
+  }
+}
+
 
