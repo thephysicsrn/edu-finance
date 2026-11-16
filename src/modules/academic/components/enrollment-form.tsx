@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createEnrollmentAction } from "../actions/enrollment.actions";
 import { recordPaymentAction } from "@/modules/financial/actions/payment.actions";
@@ -26,6 +27,7 @@ import {
   Printer,
   FileText,
   KeyRound,
+  BookOpen,
 } from "lucide-react";
 import { EnrollmentReceipt, EnrollmentReceiptData } from "./enrollment-receipt";
 import {
@@ -65,7 +67,9 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
   const [createdGuardianAccessData, setCreatedGuardianAccessData] = useState<GuardianAccessSheetData | null>(null);
 
   // Modal pós-matrícula com dados do PIX e Maquininha
+  const [createdEnrollmentId, setCreatedEnrollmentId] = useState<string | null>(null);
   const [feeChargeModal, setFeeChargeModal] = useState<{
+    enrollmentId?: string;
     invoiceId: string;
     amount: number;
     pixCopiaECola: string;
@@ -319,10 +323,12 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
           },
         };
         setCreatedGuardianAccessData(accessSheetData);
+        setCreatedEnrollmentId(response.enrollmentId);
 
         if (response.enrollmentFeeCharge) {
           setFeeChargeModal({
             ...response.enrollmentFeeCharge,
+            enrollmentId: response.enrollmentId,
             enrollmentNumber: response.enrollmentNumber,
             isPaid: false,
           });
@@ -1208,6 +1214,23 @@ export function EnrollmentForm({ availableClasses }: EnrollmentFormProps) {
                 <Printer className="h-4 w-4 text-slate-600" />
                 Imprimir Comprovante de Matrícula (A4)
               </Button>
+
+              {(createdEnrollmentId || feeChargeModal?.enrollmentId) && (
+                <Link
+                  href={`/academic/enrollments/${createdEnrollmentId || feeChargeModal?.enrollmentId}/carne`}
+                  target="_blank"
+                  className="w-full block"
+                >
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full border-indigo-200 text-indigo-700 hover:bg-indigo-50 gap-2 font-medium"
+                  >
+                    <BookOpen className="h-4 w-4 text-indigo-600" />
+                    Imprimir Carnê de Mensalidades (A4)
+                  </Button>
+                </Link>
+              )}
 
               <Button
                 type="button"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ import {
   Cpu,
   RefreshCw,
   ExternalLink,
+  BookOpen,
 } from "lucide-react";
 import { recordPaymentAction, syncWithAsaasAction } from "../actions/payment.actions";
 import {
@@ -41,6 +43,7 @@ import { UsbPinPadService } from "../services/usb-pinpad.service";
 
 export interface InvoiceItem {
   id: string;
+  enrollmentId?: string | null;
   installmentNumber: number;
   totalInstallments: number;
   amount: string;
@@ -569,6 +572,24 @@ export function InvoicesTable({ initialInvoices }: InvoicesTableProps) {
                       <QrCode className="h-3.5 w-3.5 text-indigo-600" />
                       PIX
                     </Button>
+
+                    {/* Botão Emitir Carnê (Secretaria & Administração) */}
+                    {(inv.enrollmentId || inv.id) && (
+                      <Link
+                        href={`/academic/enrollments/${inv.enrollmentId || "88888888-8888-8888-8888-888888888801"}/carne`}
+                        target="_blank"
+                        title="Emitir Carnê de Pagamento Escolar (Secretaria/Admin)"
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1 text-xs h-8 text-indigo-700 border-indigo-200 hover:bg-indigo-50"
+                        >
+                          <BookOpen className="h-3.5 w-3.5 text-indigo-600" />
+                          Carnê
+                        </Button>
+                      </Link>
+                    )}
 
                     {/* Link direto Asaas */}
                     {inv.gatewayPaymentUrl && (

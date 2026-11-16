@@ -1,7 +1,8 @@
 import { db } from "@/db";
 import { enrollments, invoices } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 import {
   CarneDocument,
   CarneDocumentData,
@@ -18,6 +19,17 @@ interface CarnePageProps {
 
 export default async function EnrollmentCarnePage({ params }: CarnePageProps) {
   const { id } = await params;
+
+  // Controle de Acesso: Apenas Secretaria e Administração podem emitir o carnê
+  const session = await auth();
+  const user = session?.user;
+
+  if (user && user.role !== "ADMIN" && user.role !== "SECRETARY") {
+    if (user.role === "GUARDIAN") {
+      redirect("/portal-do-responsavel");
+    }
+    redirect("/dashboard");
+  }
 
   let enrollmentData: any = null;
   let enrollmentInvoices: any[] = [];
