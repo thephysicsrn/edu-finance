@@ -8,22 +8,159 @@ interface LogoProps {
 }
 
 /**
- * Ícone Oficial Call Cursos Isolados
+ * Ícone Oficial Edu.Finance inspirado na identidade visual Edu.Grad:
+ * Silhueta azul royal com badge de validação verde (check) e gráficos/cartão financeiro.
+ */
+export function EduFinanceIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 120 120"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("w-10 h-10 flex-shrink-0 drop-shadow-sm", className)}
+    >
+      <defs>
+        <linearGradient id="eduFinanceBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0055ff" />
+          <stop offset="100%" stopColor="#003cd6" />
+        </linearGradient>
+        <linearGradient id="eduFinanceGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#00c878" />
+          <stop offset="100%" stopColor="#00a862" />
+        </linearGradient>
+      </defs>
+
+      {/* Cartão / Dashboard Base com cantos arredondados */}
+      <rect
+        x="12"
+        y="16"
+        width="82"
+        height="82"
+        rx="18"
+        stroke="url(#eduFinanceBlue)"
+        strokeWidth="10"
+        fill="#ffffff"
+      />
+
+      {/* Guias superiores do cabeçalho financeiro */}
+      <rect x="26" y="10" width="10" height="14" rx="5" fill="#0055ff" />
+      <rect x="70" y="10" width="10" height="14" rx="5" fill="#0055ff" />
+
+      {/* Linha divisória horizontal interna */}
+      <path
+        d="M17 44 H89"
+        stroke="#0055ff"
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
+
+      {/* Gráfico de Barras / Indicadores Financeiros em Crescimento */}
+      <rect x="28" y="66" width="9" height="18" rx="4" fill="#0055ff" />
+      <rect x="44" y="56" width="9" height="28" rx="4" fill="#0055ff" />
+      <rect x="60" y="50" width="9" height="34" rx="4" fill="#0055ff" />
+
+      {/* Badge Circular de Aprovação / Check no canto inferior direito */}
+      <g filter="drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.12))">
+        <circle cx="86" cy="86" r="24" fill="url(#eduFinanceGreen)" />
+        <circle cx="86" cy="86" r="23" stroke="#ffffff" strokeWidth="2.5" />
+        {/* Ícone de Checkmark em Branco */}
+        <path
+          d="M77 86 L83 92 L96 79"
+          stroke="#ffffff"
+          strokeWidth="4.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+    </svg>
+  );
+}
+
+/**
+ * Logotipo Completo Edu.Finance (Ícone + Tipografia + Slogan oficial)
+ */
+export function EduFinanceLogo({
+  className,
+  variant = "full",
+  size = "md",
+}: LogoProps) {
+  if (variant === "compact") {
+    return (
+      <div className={cn("flex items-center gap-2.5 select-none", className)}>
+        <EduFinanceIcon className="w-8 h-8" />
+        <div className="flex flex-col">
+          <span className="text-lg font-black tracking-tight text-[#08132b] leading-tight">
+            Edu<span className="text-[#0052ff]">.Finance</span>
+          </span>
+          <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase -mt-0.5">
+            Gestão Escolar
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  const isLarge = size === "lg";
+
+  return (
+    <div className={cn("flex items-center gap-3.5 select-none", className)}>
+      <EduFinanceIcon className={isLarge ? "w-14 h-14" : "w-11 h-11"} />
+
+      <div className="flex flex-col">
+        {/* Tipografia Principal da Marca */}
+        <div className="flex items-baseline">
+          <span
+            className={cn(
+              "font-black tracking-tight text-[#07132c]",
+              isLarge ? "text-3xl sm:text-4xl" : "text-2xl"
+            )}
+            style={{ fontFamily: "inherit" }}
+          >
+            Edu<span className="text-[#0052ff]">.Finance</span>
+          </span>
+        </div>
+
+        {/* Slogan Oficial em 2 linhas (exatamente como na identidade Edu.Grad) */}
+        {variant === "full" && (
+          <div className="mt-0.5 flex flex-col leading-tight">
+            <span
+              className={cn(
+                "font-bold uppercase tracking-wider text-[#0e1c36]",
+                isLarge ? "text-[11px]" : "text-[9.5px]"
+              )}
+            >
+              Inteligência em Gestão Financeira.
+            </span>
+            <span
+              className={cn(
+                "font-bold uppercase tracking-wider text-[#0052ff]",
+                isLarge ? "text-[11px]" : "text-[9.5px]"
+              )}
+            >
+              Mais Controle Para Educar.
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Ícone Oficial Call Cursos Isolados (Empresa / Cursinho Cliente SaaS)
  */
 export function CallLogoIcon({ className }: { className?: string }) {
   return (
     <img
       src="/call-logo.png"
       alt="Call Cursos Isolados"
-      className={cn("w-10 h-10 object-contain flex-shrink-0 drop-shadow-xs", className)}
+      className={cn("w-9 h-9 object-contain flex-shrink-0 drop-shadow-xs", className)}
     />
   );
 }
 
-export const EduFinanceIcon = CallLogoIcon;
-
 /**
- * Logotipo Completo Call Cursos Isolados (Ícone + Tipografia + Slogan oficial)
+ * Logotipo Completo Call Cursos Isolados
  */
 export function CallLogo({
   className,
@@ -34,14 +171,14 @@ export function CallLogo({
 
   if (variant === "compact") {
     return (
-      <div className={cn("flex items-center gap-2.5 select-none", className)}>
-        <CallLogoIcon className="w-8 h-8" />
+      <div className={cn("flex items-center gap-2 select-none", className)}>
+        <CallLogoIcon className="w-7 h-7" />
         <div className="flex flex-col">
-          <span className="text-base font-black tracking-tight text-[#08132b] leading-tight">
+          <span className="text-xs sm:text-sm font-black tracking-tight text-[#08132b] leading-tight">
             Call <span className="text-[#0c5195]">Cursos Isolados</span>
           </span>
           <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase -mt-0.5">
-            Gestão Escolar
+            Cursinho Presencial
           </span>
         </div>
       </div>
@@ -53,7 +190,6 @@ export function CallLogo({
       <CallLogoIcon className={isLarge ? "w-14 h-14" : "w-11 h-11"} />
 
       <div className="flex flex-col">
-        {/* Tipografia Principal da Marca */}
         <div className="flex items-baseline">
           <span
             className={cn(
@@ -65,7 +201,6 @@ export function CallLogo({
           </span>
         </div>
 
-        {/* Slogan Oficial */}
         {variant === "full" && (
           <div className="mt-0.5 flex flex-col leading-tight">
             <span
@@ -91,5 +226,39 @@ export function CallLogo({
   );
 }
 
-export const EduFinanceLogo = CallLogo;
-
+/**
+ * Badge do Tenant Ativo (Empresa Contratante)
+ * Exibido no Header e após o login ao lado da marca do sistema.
+ */
+export function TenantBadge({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-2.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100/90 transition-colors border border-slate-200/90 rounded-xl shadow-2xs select-none",
+        className
+      )}
+    >
+      <div className="w-7 h-7 rounded-lg bg-white border border-slate-200/80 p-0.5 flex items-center justify-center shrink-0 shadow-2xs">
+        <img
+          src="/call-logo.png"
+          alt="Call Cursos Isolados"
+          className="w-full h-full object-contain"
+        />
+      </div>
+      <div className="flex flex-col text-left">
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs sm:text-sm font-black text-[#07132c] tracking-tight leading-none">
+            Call Cursos Isolados
+          </span>
+          <span className="inline-flex items-center px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60 leading-tight">
+            Cursinho
+          </span>
+        </div>
+        <span className="text-[10px] text-slate-500 font-medium leading-tight mt-0.5 flex items-center gap-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          Unidade Principal • Presencial
+        </span>
+      </div>
+    </div>
+  );
+}

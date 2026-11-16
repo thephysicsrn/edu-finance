@@ -203,6 +203,28 @@ export function Sidebar({ isOpen = false, onClose, user }: SidebarProps) {
           </button>
         </div>
 
+        {/* Instituição / Cursinho Conectado (Tenant SaaS) */}
+        <div className="mx-3 mt-3 mb-1 p-2 bg-slate-50 hover:bg-slate-100/80 transition-colors border border-slate-200/80 rounded-xl flex items-center gap-2.5 select-none">
+          <div className="w-8 h-8 rounded-lg bg-white border border-slate-200/90 p-0.5 flex items-center justify-center shadow-2xs shrink-0">
+            <img
+              src="/call-logo.png"
+              alt="Call Cursos Isolados"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between">
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider leading-none">
+                Cursinho Ativo
+              </p>
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            </div>
+            <p className="text-xs font-black text-slate-800 truncate mt-0.5">
+              Call Cursos Isolados
+            </p>
+          </div>
+        </div>
+
         {/* Links de Navegação Filtrados pelo Perfil */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
           {filteredNavGroups.map((group) => (

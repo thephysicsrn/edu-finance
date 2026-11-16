@@ -5,12 +5,12 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Call Cursos Isolados - Gestão Acadêmica & Financeira",
-  description: "Plataforma integrada de gestão acadêmica e inteligência financeira - Call Cursos Isolados.",
+  title: "Edu.Finance - Gestão Financeira & Escolar para Cursinhos",
+  description: "Plataforma SaaS integrada de inteligência financeira, automação Asaas e gestão acadêmica para cursinhos e escolas.",
   icons: {
-    icon: "/call-logo.png",
-    shortcut: "/call-logo.png",
-    apple: "/call-logo.png",
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
   },
 };
 

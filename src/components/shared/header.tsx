@@ -21,8 +21,36 @@ export function Header({ onOpenSidebar }: HeaderProps) {
           <Menu className="h-5 w-5" />
         </button>
 
+        {/* Identificação do Cursinho Cliente SaaS (Call Cursos Isolados) com Logo */}
+        <div className="flex items-center gap-2.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100/90 transition-colors border border-slate-200/90 rounded-xl shadow-2xs">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white border border-slate-200 p-0.5 flex items-center justify-center shrink-0">
+            <img
+              src="/call-logo.png"
+              alt="Call Cursos Isolados"
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <div className="flex flex-col text-left">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs sm:text-sm font-black text-[#07132c] tracking-tight leading-none">
+                Call Cursos Isolados
+              </span>
+              <span className="hidden sm:inline-flex items-center px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60 leading-tight">
+                Cursinho
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-500 font-medium leading-tight mt-0.5 hidden sm:flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Unidade Principal • Presencial
+            </span>
+          </div>
+        </div>
+
+        {/* Divisor vertical */}
+        <div className="h-6 w-px bg-slate-200 hidden md:block" />
+
         {/* Campo de Busca Rápida */}
-        <div className="w-56 sm:w-80 md:w-96 relative">
+        <div className="w-48 sm:w-64 md:w-80 relative hidden md:block">
           <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <Input
             aria-label="Buscar aluno por nome, CPF ou matrícula"
