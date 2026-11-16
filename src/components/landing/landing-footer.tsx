@@ -32,7 +32,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <a href="#sobre" className="hover:text-[#0052ff] transition-colors">
-                  Sobre a Edu.Finance
+                  Sobre o Call Cursos Isolados
                 </a>
               </li>
               <li>
@@ -99,7 +99,7 @@ export function LandingFooter() {
         {/* Rodapé Inferior */}
         <div className="mt-12 pt-8 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400 text-[11px]">
           <p>
-            © {new Date().getFullYear()} <strong>Edu.Finance Tecnologia Educacional Ltda.</strong> CNPJ: 45.123.789/0001-90. Todos os direitos reservados.
+            © {new Date().getFullYear()} <strong>Call Cursos Isolados.</strong> Educação • Ideias • Pessoas. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-6">
             <Link href="/login" className="hover:text-slate-600 transition-colors">

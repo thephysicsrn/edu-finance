@@ -48,9 +48,9 @@ export function CarneSlip({ slip }: CarneSlipProps) {
   // Fallbacks de PIX e Código de Barras
   const pixCopiaECola =
     slip.pixCopiaECola ||
-    `00020126580014br.gov.bcb.pix0136pix-edufinance-mensalidade-${slip.installmentNumber}5204000053039865407${slip.finalAmount.toFixed(
+    `00020126580014br.gov.bcb.pix0136pix-callcursos-mensalidade-${slip.installmentNumber}5204000053039865407${slip.finalAmount.toFixed(
       2
-    )}5802BR5915Edu.Finance6009SaoPaulo62070503***6304`;
+    )}5802BR5919CallCursosIsolados6009SaoPaulo62070503***6304`;
 
   const pixQrCodeUrl =
     slip.pixQrCodeUrl ||
@@ -194,7 +194,7 @@ export function CarneSlip({ slip }: CarneSlipProps) {
             <div className="col-span-3 pt-1 border-t border-slate-200">
               <span className="text-[9px] text-slate-400 block uppercase">Beneficiário:</span>
               <span className="font-medium text-slate-900 truncate block">
-                Edu.Finance Cursinho Preparatório • CNPJ: 12.345.678/0001-90
+                Call Cursos Isolados • Educação, Ideias e Pessoas
               </span>
             </div>
             <div className="border-l border-slate-200 pl-1.5 pt-1 border-t border-slate-200 bg-emerald-50/60 p-1 rounded">

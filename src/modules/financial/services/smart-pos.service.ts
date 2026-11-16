@@ -72,7 +72,7 @@ export class SmartPosService {
             },
             body: JSON.stringify({
               amount: Math.round(amountNumber * 100), // centavos
-              description: `Cursinho Pro: ${invoice.student?.fullName || "Aluno"}`,
+              description: `Call Cursos Isolados: ${invoice.student?.fullName || "Aluno"}`,
               payment: {
                 installments,
                 type: paymentType,

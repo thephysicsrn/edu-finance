@@ -55,7 +55,7 @@ export function ContactFormSection() {
                 </div>
                 <h3 className="text-2xl font-bold text-white">Mensagem Enviada com Sucesso!</h3>
                 <p className="text-slate-200 text-sm max-w-md mx-auto leading-relaxed">
-                  Obrigado pelo interesse na <strong>Edu.Finance</strong>. Nossa equipe entrará em contato em menos de 2 horas no seu WhatsApp.
+                  Obrigado pelo interesse no <strong>Call Cursos Isolados</strong>. Nossa equipe entrará em contato em menos de 2 horas no seu WhatsApp.
                 </p>
                 <Button
                   onClick={() => {
@@ -143,7 +143,7 @@ export function ContactFormSection() {
                     rows={4}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Conte-nos quantos alunos você atende ou quais desafios gostaria de solucionar com a Edu.Finance..."
+                    placeholder="Conte-nos quantos alunos você atende ou quais desafios gostaria de solucionar com o Call Cursos Isolados..."
                     className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-400 resize-none transition-colors"
                   />
                 </div>
@@ -221,7 +221,7 @@ export function ContactFormSection() {
               {/* BOTÃO WHATSAPP DIRETO */}
               <div className="pt-2">
                 <a
-                  href="https://wa.me/5584981220173?text=Olá!%20Gostaria%20de%20conhecer%20a%20Edu.Finance%20para%20minha%20instituição"
+                  href="https://wa.me/5584981220173?text=Olá!%20Gostaria%20de%20conhecer%20o%20Call%20Cursos%20Isolados%20para%20minha%20instituição"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 bg-[#00c878] hover:bg-[#00b069] active:bg-[#009b5c] text-white px-6 py-3.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-emerald-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00c878] focus-visible:ring-offset-2 focus-visible:ring-offset-[#07132c]"

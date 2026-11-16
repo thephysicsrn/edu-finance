@@ -318,14 +318,14 @@ export function EnrollmentReceipt({ data, onClose, isModal = false }: Enrollment
             <div className="space-y-1">
               <div className="border-t border-slate-900 pt-1" />
               <p className="font-bold text-slate-900">Secretaria & Coordenação Pedagógica</p>
-              <p className="text-[10px] text-slate-400">Cursinho Pro Preparatórios</p>
+              <p className="text-[10px] text-slate-400">Call Cursos Isolados</p>
             </div>
           </div>
 
           {/* Rodapé com Código de Autenticidade */}
           <div className="pt-4 border-t text-center text-[9px] text-slate-400 flex items-center justify-between">
             <span>Autenticação Digital: SHA256-{data.enrollmentNumber}-VALID</span>
-            <span>Documento emitido pelo Sistema de Gestão Cursinho Pro</span>
+            <span>Documento emitido pelo Sistema de Gestão Call Cursos Isolados</span>
           </div>
         </div>
 

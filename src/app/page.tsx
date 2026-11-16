@@ -57,7 +57,7 @@ export default async function LandingPage() {
 
               {/* Subtítulo Institucional */}
               <p className="mt-6 text-base sm:text-lg text-slate-200 leading-relaxed max-w-2xl mx-auto text-balance">
-                A <strong>Edu.Finance</strong> transforma a rotina do seu cursinho ou escola: automatize mensalidades via PIX e Boletos Asaas, reduza a inadimplência em até 82% e unifique <strong>Diretoria, Secretaria e Professores</strong> em um único ecossistema em nuvem.
+                O <strong>Call Cursos Isolados</strong> transforma a gestão acadêmica e financeira: automatize mensalidades via PIX e Boletos Asaas, reduza a inadimplência e unifique <strong>Diretoria, Secretaria e Professores</strong> em um único ecossistema em nuvem.
               </p>
 
               {/* Botões de Ação no Hero */}
@@ -160,7 +160,7 @@ export default async function LandingPage() {
                 Módulos & Jornada Operacional
               </h2>
               <p className="mt-3 text-slate-500 text-sm sm:text-base text-balance">
-                Veja como o Edu.Finance conecta a matrícula, a automação Asaas, a chamada em sala e o DRE em uma esteira 100% contínua e sem atritos.
+                Veja como o Call Cursos Isolados conecta a matrícula, a automação Asaas, a chamada em sala e o DRE em uma esteira 100% contínua e sem atritos.
               </p>
             </div>
 
@@ -198,7 +198,7 @@ export default async function LandingPage() {
                   Integração Nativa com Asaas API v3
                 </h2>
                 <p className="mt-4 text-slate-200 text-sm sm:text-base leading-relaxed">
-                  Elimine para sempre os arquivos de remessa e retorno bancário (CNAB). Com o gateway Asaas integrado à Edu.Finance, seu cursinho emite boletos e QR Codes PIX registrados instantaneamente com webhook em tempo real.
+                  Elimine para sempre os arquivos de remessa e retorno bancário (CNAB). Com o gateway Asaas integrado ao Call Cursos Isolados, sua instituição emite boletos e QR Codes PIX registrados instantaneamente com webhook em tempo real.
                 </p>
 
                 <div className="mt-8 grid sm:grid-cols-2 gap-4 text-xs">
