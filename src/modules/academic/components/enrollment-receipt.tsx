@@ -103,18 +103,20 @@ export function EnrollmentReceipt({ data, onClose, isModal = false }: Enrollment
           {/* Cabeçalho Institucional */}
           <div className="flex items-start justify-between pb-4 border-b-2 border-slate-900">
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xl print:border print:border-black">
-                CP
-              </div>
+              <img
+                src="/call-logo.png"
+                alt="Call Cursos Isolados"
+                className="h-12 w-auto object-contain"
+              />
               <div>
                 <h1 className="text-xl font-extrabold uppercase tracking-tight text-slate-900">
-                  Cursinho Pro Preparatórios
+                  Call Cursos Isolados
                 </h1>
                 <p className="text-xs text-slate-500 print:text-black">
-                  Instituição de Ensino e Preparação para Vestibulares e Concursos
+                  Educação • Ideias • Pessoas para um mundo melhor
                 </p>
                 <p className="text-[11px] text-slate-400 print:text-slate-600">
-                  CNPJ: 12.345.678/0001-90 • São Paulo - SP • Atendimento: (11) 3456-7890
+                  Secretaria Acadêmica & Comprovante de Matrícula
                 </p>
               </div>
             </div>

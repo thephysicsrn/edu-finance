@@ -150,12 +150,17 @@ export function CarneSlip({ slip }: CarneSlipProps) {
           {/* Topo do Boleto / Carnê */}
           <div className="flex items-center justify-between border-b-2 border-slate-900 pb-1">
             <div className="flex items-center gap-2">
+              <img
+                src="/call-logo.png"
+                alt="Call Cursos Isolados"
+                className="h-5 w-auto object-contain"
+              />
               <span className="font-black text-sm text-slate-900 tracking-tight">
-                Edu<span className="text-indigo-600">.Finance</span>
+                Call <span className="text-[#0c5195]">Cursos Isolados</span>
               </span>
               <span className="text-slate-400">|</span>
               <span className="text-[10px] font-bold text-slate-700 uppercase tracking-wider">
-                Carnê de Mensalidade Escolar
+                Carnê de Mensalidade
               </span>
             </div>
             <div className="flex items-center gap-2">

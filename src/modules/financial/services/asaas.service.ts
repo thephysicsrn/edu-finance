@@ -235,5 +235,28 @@ export class AsaasService {
     const endpoint = `/payments?${query.toString()}`;
     return await this.request<{ data: AsaasPaymentResponse[]; totalCount: number; hasMore: boolean }>(endpoint);
   }
+
+  /**
+   * 8. Confirma recebimento presencial / externo (cartão presencial na maquininha, dinheiro, etc.) no Asaas
+   * Altera a cobrança no Asaas para 'RECEIVED_IN_CASH' e cessa réguas de cobrança por e-mail/SMS
+   */
+  static async receiveInCash(
+    paymentId: string,
+    input: {
+      paymentDate?: string;
+      value: number;
+      notifyCustomer?: boolean;
+    }
+  ): Promise<AsaasPaymentResponse> {
+    const todayStr = new Date().toISOString().split("T")[0];
+    return await this.request<AsaasPaymentResponse>(`/payments/${paymentId}/receiveInCash`, {
+      method: "POST",
+      body: JSON.stringify({
+        paymentDate: input.paymentDate || todayStr,
+        value: input.value,
+        notifyCustomer: input.notifyCustomer ?? false,
+      }),
+    });
+  }
 }
 

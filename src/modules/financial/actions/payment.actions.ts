@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { recordPaymentSchema, RecordPaymentInput } from "../schemas/payment.schema";
 import { BillingGatewayService } from "../services/billing-gateway.service";
+import { AsaasService } from "../services/asaas.service";
 
 export async function recordPaymentAction(rawInput: RecordPaymentInput) {
   const session = await auth();
@@ -81,6 +82,26 @@ export async function recordPaymentAction(rawInput: RecordPaymentInput) {
 
       return payment;
     });
+
+    // Se a fatura possuir cobrança correspondente no Asaas, dá baixa presencial no Asaas
+    try {
+      const invCheck = await db.query.invoices.findFirst({
+        where: eq(invoices.id, data.invoiceId),
+      });
+      if (
+        AsaasService.isConfigured() &&
+        invCheck?.gatewayInvoiceId &&
+        invCheck.gatewayInvoiceId.startsWith("pay_")
+      ) {
+        await AsaasService.receiveInCash(invCheck.gatewayInvoiceId, {
+          value: Number(result.totalReceived) || Number(invCheck.amount),
+          paymentDate: new Date().toISOString().split("T")[0],
+          notifyCustomer: false,
+        });
+      }
+    } catch (asErr) {
+      console.warn("[Manual Payment] Falha ao sincronizar baixa presencial no Asaas:", asErr);
+    }
 
     revalidatePath("/financial/invoices");
     revalidatePath("/financial/defaulters");

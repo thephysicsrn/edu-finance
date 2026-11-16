@@ -49,7 +49,7 @@ env:
       - RUNTIME
 
   - variable: NEXT_PUBLIC_APP_NAME
-    value: "Edu.Finance - Gestão Escolar & Dashboard Financeiro"
+    value: "Call Cursos Isolados - Gestão Acadêmica & Financeira"
     availability:
       - BUILD
       - RUNTIME

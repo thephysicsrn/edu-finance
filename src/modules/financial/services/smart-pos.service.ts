@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { posTerminals, invoices, payments, enrollments } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { AsaasService } from "./asaas.service";
 
 export interface CreatePosIntentParams {
   invoiceId: string;
@@ -204,6 +205,19 @@ export class SmartPosService {
 
       return paymentRecord;
     });
+
+    // 4. Se a fatura possuir cobrança correspondente no Asaas, dá baixa presencial no Asaas
+    if (AsaasService.isConfigured() && invoice.gatewayInvoiceId && invoice.gatewayInvoiceId.startsWith("pay_")) {
+      try {
+        await AsaasService.receiveInCash(invoice.gatewayInvoiceId, {
+          value: Number(invoice.finalAmount),
+          paymentDate: new Date().toISOString().split("T")[0],
+          notifyCustomer: false,
+        });
+      } catch (asErr) {
+        console.warn("[SmartPOS] Falha ao sincronizar baixa presencial no Asaas:", asErr);
+      }
+    }
 
     return {
       success: true,

@@ -106,10 +106,10 @@ export function CarneDocument({ data }: CarneDocumentProps) {
               <EduFinanceLogo size="md" variant="full" />
               <div className="pl-3 border-l border-slate-200">
                 <h2 className="text-sm font-bold text-slate-900">
-                  CURSINHO PRÉ-VESTIBULAR & ENSINO
+                  CALL CURSOS ISOLADOS
                 </h2>
                 <p className="text-[10px] text-slate-500">
-                  CNPJ: 12.345.678/0001-90 • Secretaria Acadêmica & Financeira
+                  Educação • Ideias • Pessoas para um mundo melhor
                 </p>
               </div>
             </div>

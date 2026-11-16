@@ -117,18 +117,20 @@ export function GuardianAccessSheet({
           {/* Cabeçalho da Escola */}
           <div className="flex items-start justify-between border-b-2 border-slate-900 pb-5">
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xl">
-                CP
-              </div>
+              <img
+                src="/call-logo.png"
+                alt="Call Cursos Isolados"
+                className="h-12 w-auto object-contain"
+              />
               <div>
                 <h1 className="text-xl font-black text-slate-900 tracking-tight">
-                  CURSINHO PRÉ-VESTIBULAR & CONCURSOS
+                  CALL CURSOS ISOLADOS
                 </h1>
                 <p className="text-xs text-slate-500 font-medium">
-                  Educação de Alta Performance & Gestão Financeira Transparente
+                  Educação • Ideias • Pessoas para um mundo melhor
                 </p>
                 <p className="text-[11px] text-slate-400">
-                  CNPJ: 12.345.678/0001-90 ● Secretaria: (11) 98888-7777 ● Central Financeira
+                  Secretaria Acadêmica & Central do Responsável Legal
                 </p>
               </div>
             </div>
