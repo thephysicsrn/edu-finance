@@ -113,7 +113,7 @@ export function LandingHeader({ user }: LandingHeaderProps) {
           {/* Botão CTA Principal */}
           <div className="hidden sm:flex items-center gap-3">
             <Link href={destinationHref}>
-              <Button className="bg-[#0052ff] hover:bg-[#0041cc] active:bg-[#0037b3] text-white font-semibold shadow-sm rounded-lg px-5 gap-2 h-10 text-xs uppercase tracking-wider focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2">
+              <Button className="bg-[#0052ff] hover:bg-[#0041cc] active:bg-[#0037b3] text-white font-bold shadow-sm rounded-lg px-5 gap-2 h-11 text-xs uppercase tracking-wider focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2">
                 <span>{user ? "Ir para o Painel" : "Acessar Sistema"}</span>
                 <ArrowRight className="h-4 w-4" />
               </Button>

@@ -147,7 +147,7 @@ export function RoleProfilesShowcase() {
               key={role.id}
               type="button"
               onClick={() => setActiveRole(role.id)}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2 ${
                 isActive
                   ? "bg-[#07132c] text-white shadow-md scale-105"
                   : "bg-white text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300"
@@ -239,21 +239,21 @@ export function RoleProfilesShowcase() {
                   className={`mb-4 p-3 rounded-xl border transition-all duration-300 ${
                     isActive
                       ? "bg-slate-900 text-white border-slate-800 shadow-inner"
-                      : "bg-slate-50 text-slate-700 border-slate-100"
+                      : "bg-slate-50 text-slate-700 border-slate-200/70"
                   }`}
                 >
                   <div className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider mb-1">
                     <Sparkles
-                      className={`h-3 w-3 ${isActive ? "text-[#00c878]" : "text-slate-400"}`}
+                      className={`h-3 w-3 ${isActive ? "text-[#00c878]" : "text-slate-500"}`}
                     />
-                    <span className={isActive ? "text-slate-300" : "text-slate-500"}>
+                    <span className={isActive ? "text-slate-300" : "text-slate-600"}>
                       Em Tempo Real no Painel
                     </span>
                   </div>
                   <p className="text-xs font-semibold leading-tight">{role.livePreview.metric}</p>
                   <p
                     className={`text-[11px] mt-0.5 ${
-                      isActive ? "text-slate-400" : "text-slate-500"
+                      isActive ? "text-slate-400" : "text-slate-600"
                     }`}
                   >
                     {role.livePreview.subtext}
@@ -261,7 +261,7 @@ export function RoleProfilesShowcase() {
                 </div>
 
                 {/* Checklist de Recursos com Micro-interações */}
-                <div className="text-xs text-slate-600 space-y-2.5 pt-3 border-t border-slate-100">
+                <div className="text-xs text-slate-600 space-y-2.5 pt-3 border-t border-slate-200/60">
                   {role.features.map((feature, fIdx) => (
                     <p
                       key={fIdx}
@@ -282,7 +282,7 @@ export function RoleProfilesShowcase() {
                 <Link href={role.href} className="block">
                   <button
                     type="button"
-                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer ${
+                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2 ${
                       isActive
                         ? "text-white shadow-md hover:brightness-110 active:scale-98"
                         : "bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900"

@@ -187,7 +187,7 @@ export function TenantLoginClient({ tenant }: TenantLoginClientProps) {
 
           {/* Atalhos Rápidos de Acesso para Demonstração */}
           <div className="mt-6 pt-6 border-t border-slate-100">
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center mb-3">
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center mb-3">
               Acesso Rápido de Testes (Demonstração)
             </p>
             <div className="grid grid-cols-2 gap-2 text-xs">
@@ -224,9 +224,9 @@ export function TenantLoginClient({ tenant }: TenantLoginClientProps) {
         </div>
 
         {/* Rodapé Powered by Edu.Finance */}
-        <div className="mt-8 text-center flex items-center justify-center gap-2 text-xs text-slate-400">
+        <div className="mt-8 text-center flex items-center justify-center gap-2 text-xs text-slate-500 font-medium">
           <EduFinanceIcon className="w-4 h-4" />
-          <span>Plataforma de Gestão por <strong>Edu.Finance</strong></span>
+          <span>Plataforma de Gestão por <strong className="text-slate-700">Edu.Finance</strong></span>
         </div>
       </div>
     </div>

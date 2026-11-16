@@ -81,7 +81,7 @@ export function ContactFormSection() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Ex: Roberto Silveira"
-                    className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-400 transition-colors"
+                    className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-300/75 transition-colors"
                   />
                 </div>
 
@@ -97,7 +97,7 @@ export function ContactFormSection() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="diretoria@escola.com.br"
-                      className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-400 transition-colors"
+                      className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-300/75 transition-colors"
                     />
                   </div>
 
@@ -112,7 +112,7 @@ export function ContactFormSection() {
                       value={formData.phone}
                       onChange={(e) => handlePhoneChange(e.target.value)}
                       placeholder="(84) 98122-0173"
-                      className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-400 transition-colors"
+                      className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-300/75 transition-colors"
                     />
                   </div>
                 </div>
@@ -144,7 +144,7 @@ export function ContactFormSection() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Conte-nos quantos alunos você atende ou quais desafios gostaria de solucionar com a Edu.Finance..."
-                    className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-400 resize-none transition-colors"
+                    className="w-full bg-[#07132c] border border-white/20 focus:border-[#0052ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] rounded-lg px-4 py-3 text-sm text-white placeholder:text-slate-300/75 resize-none transition-colors"
                   />
                 </div>
 
@@ -196,7 +196,7 @@ export function ContactFormSection() {
             </div>
 
             <div className="pt-6 border-t border-white/15 space-y-5">
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-slate-200">
                 Se preferir, tire suas dúvidas através do telefone:
               </p>
 
@@ -206,7 +206,7 @@ export function ContactFormSection() {
                   <Phone className="h-6 w-6" />
                 </div>
                 <div>
-                  <span className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold block">
+                  <span className="text-[11px] uppercase tracking-wider text-slate-300 font-semibold block">
                     Central Telefônica & Suporte
                   </span>
                   <a

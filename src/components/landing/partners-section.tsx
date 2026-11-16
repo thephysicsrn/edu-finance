@@ -73,6 +73,7 @@ export function PartnersSection() {
               "shadow-[0_4px_20px_-4px_rgba(7,19,44,0.06)] hover:shadow-[0_20px_40px_-12px_rgba(12,81,149,0.18)]",
               "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
               "active:scale-[0.985] active:duration-75",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2",
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
@@ -129,7 +130,7 @@ export function PartnersSection() {
                 <span>Acessar Sistema do Call</span>
                 <ArrowRight className="h-4 w-4 transition-transform duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5" />
               </span>
-              <span className="text-[11px] font-mono text-slate-400 bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200/60">
+              <span className="text-[11px] font-mono font-semibold text-slate-600 bg-slate-100/90 px-2.5 py-1 rounded-md border border-slate-200">
                 url/call
               </span>
             </div>
@@ -145,6 +146,7 @@ export function PartnersSection() {
               "transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
               "hover:shadow-[0_12px_30px_-8px_rgba(7,19,44,0.08)]",
               "active:scale-[0.985] active:duration-75",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2",
               isVisible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
@@ -155,7 +157,7 @@ export function PartnersSection() {
           >
             <div>
               <div className="flex items-start justify-between gap-4 mb-5">
-                <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#0052ff] border border-slate-200 flex items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1">
+                <div className="w-16 h-16 rounded-2xl bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-[#0052ff] border border-slate-200 flex items-center justify-center transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1">
                   <School className="h-8 w-8" />
                 </div>
 
@@ -170,7 +172,7 @@ export function PartnersSection() {
               <p className="text-xs font-semibold text-slate-500 mt-1">
                 Faça parte da rede de tecnologia Edu.Finance
               </p>
-              <p className="text-xs sm:text-sm text-slate-500 mt-3 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed">
                 Modernize o financeiro, automatize mensalidades via Asaas e reduza a inadimplência no seu cursinho ou colégio em até 82%.
               </p>
             </div>

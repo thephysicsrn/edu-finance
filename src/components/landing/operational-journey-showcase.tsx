@@ -270,7 +270,7 @@ export function OperationalJourneyShowcase() {
                 key={step.id}
                 type="button"
                 onClick={() => setActiveStepId(step.id)}
-                className={`relative p-4 sm:p-5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between ${
+                className={`relative p-4 sm:p-5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2 ${
                   isActive
                     ? "bg-[#07132c] text-white border-transparent shadow-xl scale-[1.02] ring-2 ring-[#0052ff]"
                     : "bg-white text-slate-700 border-slate-200/90 hover:bg-slate-50 hover:border-slate-300 shadow-xs"
@@ -332,14 +332,10 @@ export function OperationalJourneyShowcase() {
           {/* Coluna Esquerda: Contexto, Descrição e Métricas Chave (5 cols) */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-900 text-white mb-3">
-                <Sparkles className="h-3 w-3 text-[#00c878]" />
-                <span>{activeStep.tag}</span>
-              </div>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
                 {activeStep.title}
               </h3>
-              <p className="text-xs sm:text-sm font-semibold text-[#0052ff] mt-1">
+              <p className="text-xs sm:text-sm font-semibold text-[#0052ff] mt-2">
                 {activeStep.subtitle}
               </p>
             </div>
@@ -370,7 +366,7 @@ export function OperationalJourneyShowcase() {
               <Link href={activeStep.destinationHref}>
                 <button
                   type="button"
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#0052ff] hover:bg-[#0041cc] active:bg-[#0037b3] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#0052ff] hover:bg-[#0041cc] active:bg-[#0037b3] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0052ff] focus-visible:ring-offset-2"
                 >
                   <span>{activeStep.ctaLabel}</span>
                   <ArrowRight className="h-4 w-4" />
@@ -390,7 +386,7 @@ export function OperationalJourneyShowcase() {
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   </div>
-                  <span className="text-[11px] font-mono text-slate-400 pl-2">
+                  <span className="text-[11px] font-mono text-slate-300 pl-2">
                     edufinance.app/fluxo/{activeStep.id}
                   </span>
                 </div>
@@ -403,10 +399,7 @@ export function OperationalJourneyShowcase() {
 
               {/* Título Interno da Mini-Tela */}
               <div className="mb-4">
-                <span className="text-[10px] uppercase font-semibold text-slate-400">
-                  Visualização em Tempo Real do Módulo
-                </span>
-                <h4 className="text-base sm:text-lg font-bold text-white mt-0.5">
+                <h4 className="text-base sm:text-lg font-bold text-white">
                   {activeStep.previewScreen.title}
                 </h4>
               </div>
@@ -422,7 +415,7 @@ export function OperationalJourneyShowcase() {
                       <p className="text-xs sm:text-sm font-bold text-white leading-tight">
                         {row.primary}
                       </p>
-                      <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">
+                      <p className="text-[11px] text-slate-300 mt-0.5 leading-tight">
                         {row.secondary}
                       </p>
                     </div>
@@ -444,7 +437,7 @@ export function OperationalJourneyShowcase() {
               </div>
 
               {/* Nota de Rodapé Informativa */}
-              <div className="mt-4 pt-3 border-t border-white/10 text-[11px] text-slate-400 flex items-center gap-2">
+              <div className="mt-4 pt-3 border-t border-white/10 text-[11px] text-slate-300 flex items-center gap-2">
                 <Zap className="h-3.5 w-3.5 text-[#00c878] shrink-0" />
                 <span>{activeStep.previewScreen.footerNote}</span>
               </div>

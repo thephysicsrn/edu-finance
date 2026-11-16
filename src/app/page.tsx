@@ -122,11 +122,11 @@ export default async function LandingPage() {
         <section className="relative z-20 -mt-16 sm:-mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 select-none">
           <div className="grid gap-6 md:grid-cols-3">
             {/* Pilar 1: AUTOMAÇÃO & ASAAS */}
-            <div className="bg-[#0b1736] border border-white/10 text-white rounded-2xl p-6 sm:p-8 shadow-2xl transition-transform hover:-translate-y-1 duration-200">
+            <div className="bg-[#0b1736] border border-white/15 text-white rounded-2xl p-6 sm:p-8 shadow-[0_16px_36px_-12px_rgba(4,10,23,0.65)] hover:-translate-y-1 hover:border-white/25 transition-all duration-200">
               <div className="h-12 w-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-5 border border-blue-500/30">
                 <Handshake className="h-6 w-6" />
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white uppercase tracking-wider mb-2">
+              <h3 className="text-base sm:text-lg font-bold text-white tracking-wide mb-2">
                 Automação & Asaas
               </h3>
               <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
@@ -135,11 +135,11 @@ export default async function LandingPage() {
             </div>
 
             {/* Pilar 2: COMBATE À INADIMPLÊNCIA */}
-            <div className="bg-[#0b1736] border border-white/10 text-white rounded-2xl p-6 sm:p-8 shadow-2xl transition-transform hover:-translate-y-1 duration-200">
+            <div className="bg-[#0b1736] border border-white/15 text-white rounded-2xl p-6 sm:p-8 shadow-[0_16px_36px_-12px_rgba(4,10,23,0.65)] hover:-translate-y-1 hover:border-white/25 transition-all duration-200">
               <div className="h-12 w-12 rounded-xl bg-emerald-500/20 text-[#00c878] flex items-center justify-center mb-5 border border-emerald-500/30">
                 <ShieldCheck className="h-6 w-6" />
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white uppercase tracking-wider mb-2">
+              <h3 className="text-base sm:text-lg font-bold text-white tracking-wide mb-2">
                 Combate à Inadimplência
               </h3>
               <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
@@ -148,11 +148,11 @@ export default async function LandingPage() {
             </div>
 
             {/* Pilar 3: GESTÃO ACADÊMICA 360° */}
-            <div className="bg-[#0b1736] border border-white/10 text-white rounded-2xl p-6 sm:p-8 shadow-2xl transition-transform hover:-translate-y-1 duration-200">
+            <div className="bg-[#0b1736] border border-white/15 text-white rounded-2xl p-6 sm:p-8 shadow-[0_16px_36px_-12px_rgba(4,10,23,0.65)] hover:-translate-y-1 hover:border-white/25 transition-all duration-200">
               <div className="h-12 w-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-5 border border-indigo-500/30">
                 <Scale className="h-6 w-6" />
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white uppercase tracking-wider mb-2">
+              <h3 className="text-base sm:text-lg font-bold text-white tracking-wide mb-2">
                 Gestão Acadêmica 360°
               </h3>
               <p className="text-slate-200 text-xs sm:text-sm leading-relaxed">
@@ -173,10 +173,10 @@ export default async function LandingPage() {
         <section id="modulos" className="py-24 sm:py-32 bg-white select-none">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-14">
-              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#07132c] uppercase text-balance">
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#07132c] text-balance">
                 Módulos & Jornada Operacional
               </h2>
-              <p className="mt-3 text-slate-500 text-sm sm:text-base text-balance">
+              <p className="mt-3 text-slate-600 text-sm sm:text-base text-balance leading-relaxed">
                 Veja como o Edu.Finance conecta a matrícula, a automação Asaas, a chamada em sala e o DRE em uma esteira 100% contínua e sem atritos.
               </p>
             </div>
@@ -194,7 +194,7 @@ export default async function LandingPage() {
               <h2 className="text-2xl sm:text-4xl font-extrabold text-[#07132c] text-balance">
                 Três Visões Exclusivas para Cada Papel na Escola
               </h2>
-              <p className="text-slate-600 text-sm sm:text-base mt-3 text-balance">
+              <p className="text-slate-600 text-sm sm:text-base mt-3 text-balance leading-relaxed">
                 Cada profissional acessa apenas o que é relevante para o seu trabalho, garantindo segurança total dos dados financeiros e foco máximo na produtividade.
               </p>
             </div>
@@ -208,7 +208,7 @@ export default async function LandingPage() {
         {/* ============================================================== */}
         <section id="asaas" className="py-20 sm:py-28 bg-white border-b border-slate-200 select-none">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-[#07132c] rounded-3xl p-8 sm:p-14 text-white shadow-2xl relative overflow-hidden">
+            <div className="bg-[#07132c] rounded-3xl p-8 sm:p-14 text-white shadow-[0_24px_50px_-12px_rgba(7,19,44,0.3)] relative overflow-hidden">
               <div className="max-w-2xl relative z-10">
                 <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-balance">
                   Integração Nativa com Asaas API v3
@@ -220,11 +220,11 @@ export default async function LandingPage() {
                 <div className="mt-8 grid sm:grid-cols-2 gap-4 text-xs">
                   <div className="p-4 rounded-xl bg-white/5 border border-white/10">
                     <h3 className="font-bold text-[#00c878] mb-1 text-sm">PIX Instantâneo</h3>
-                    <p className="text-slate-300">Baixa automática em até 3 segundos com notificação imediata para a secretaria.</p>
+                    <p className="text-slate-200">Baixa automática em até 3 segundos com notificação imediata para a secretaria.</p>
                   </div>
                   <div className="p-4 rounded-xl bg-white/5 border border-white/10">
                     <h3 className="font-bold text-blue-300 mb-1 text-sm">Boleto Registrado</h3>
-                    <p className="text-slate-300">Linha digitável oficial sem cobrança prévia, compensação D+1 e régua por WhatsApp.</p>
+                    <p className="text-slate-200">Linha digitável oficial sem cobrança prévia, compensação D+1 e régua por WhatsApp.</p>
                   </div>
                 </div>
               </div>

@@ -32,6 +32,10 @@
   color: #ffffff;
 }
 
+input, textarea, select {
+  caret-color: #0052ff;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

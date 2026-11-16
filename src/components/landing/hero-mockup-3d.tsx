@@ -251,23 +251,23 @@ export function HeroMockup3D() {
           {/* Header Interno do Mockup com Estado Interativo */}
           <div className="flex items-center justify-between">
             <div>
-              <div className="flex items-center gap-2">
-                <p className="text-xs text-slate-400 font-medium transition-colors">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                  Painel Consolidado de Gestão Escolar
+                </h3>
+                <span className="text-[11px] px-2.5 py-0.5 rounded-md bg-white/10 text-slate-200 font-medium border border-white/10">
                   {currentStats.label}
-                </p>
+                </span>
                 {currentStats.isCustomMonth && (
                   <button
                     type="button"
                     onClick={() => setActiveMonthIdx(null)}
-                    className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 transition-colors"
+                    className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-400/30 transition-colors"
                   >
                     Voltar ao consolidado
                   </button>
                 )}
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                Painel Consolidado de Gestão Escolar
-              </h3>
             </div>
             <div className="hidden sm:flex items-center gap-2 text-xs">
               <span className="px-2.5 py-1 rounded-md bg-white/10 text-slate-200 text-[11px] hover:bg-white/15 transition-colors cursor-default">
@@ -283,14 +283,14 @@ export function HeroMockup3D() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             {/* Card 1: TOTAL PREVISTO */}
             <div className="p-3 rounded-xl bg-white/5 border border-white/10 transition-all duration-200 hover:bg-white/10 hover:-translate-y-0.5 hover:border-blue-400/40">
-              <div className="flex items-center justify-between text-slate-400 text-[10px] uppercase font-semibold">
+              <div className="flex items-center justify-between text-slate-300 text-[10px] uppercase font-semibold">
                 <span>Total Previsto</span>
                 <DollarSign className="h-3.5 w-3.5 text-blue-400" />
               </div>
               <div className="text-base sm:text-xl font-bold text-white mt-1 tabular-nums transition-all">
                 {formatCurrency(currentStats.previsto)}
               </div>
-              <p className="text-[10px] text-slate-400 mt-0.5">
+              <p className="text-[10px] text-slate-300 mt-0.5">
                 {currentStats.isCustomMonth ? "Meta do mês" : "Contratos vigentes"}
               </p>
             </div>
@@ -303,21 +303,21 @@ export function HeroMockup3D() {
                   : "bg-emerald-500/10 border border-emerald-500/25 hover:border-emerald-400/50"
               }`}
             >
-              <div className="flex items-center justify-between text-emerald-400 text-[10px] uppercase font-semibold">
+              <div className="flex items-center justify-between text-emerald-300 text-[10px] uppercase font-semibold">
                 <span>Receita em Caixa</span>
                 <ArrowUpRight className={`h-3.5 w-3.5 transition-transform ${livePing ? "scale-125 text-[#00c878]" : ""}`} />
               </div>
               <div className="text-base sm:text-xl font-bold text-[#00c878] mt-1 tabular-nums transition-all">
                 {formatCurrency(currentStats.caixa)}
               </div>
-              <p className="text-[10px] text-emerald-300/80 mt-0.5">
+              <p className="text-[10px] text-emerald-300 mt-0.5">
                 Liquidado via PIX
               </p>
             </div>
 
             {/* Card 3: INADIMPLÊNCIA */}
             <div className="p-3 rounded-xl bg-white/5 border border-white/10 transition-all duration-200 hover:bg-white/10 hover:-translate-y-0.5 hover:border-emerald-400/40">
-              <div className="flex items-center justify-between text-slate-400 text-[10px] uppercase font-semibold">
+              <div className="flex items-center justify-between text-slate-300 text-[10px] uppercase font-semibold">
                 <span>Inadimplência</span>
                 <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
               </div>
@@ -327,19 +327,19 @@ export function HeroMockup3D() {
                   -82%
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 mt-0.5">Régua ativa Asaas</p>
+              <p className="text-[10px] text-slate-300 mt-0.5">Régua ativa Asaas</p>
             </div>
 
             {/* Card 4: ASSIDUIDADE */}
             <div className="p-3 rounded-xl bg-white/5 border border-white/10 transition-all duration-200 hover:bg-white/10 hover:-translate-y-0.5 hover:border-indigo-400/40">
-              <div className="flex items-center justify-between text-slate-400 text-[10px] uppercase font-semibold">
+              <div className="flex items-center justify-between text-slate-300 text-[10px] uppercase font-semibold">
                 <span>Assiduidade</span>
                 <Users className="h-3.5 w-3.5 text-indigo-400" />
               </div>
               <div className="text-base sm:text-xl font-bold text-white mt-1 tabular-nums transition-all">
                 {currentStats.assiduidade}%
               </div>
-              <p className="text-[10px] text-slate-400 mt-0.5">Diário digital</p>
+              <p className="text-[10px] text-slate-300 mt-0.5">Diário digital</p>
             </div>
           </div>
 
@@ -348,7 +348,7 @@ export function HeroMockup3D() {
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-white flex items-center gap-2">
                 <span>Previsão vs. Liquidação Realizada (Mês a Mês)</span>
-                <span className="text-[10px] text-slate-400 hidden md:inline font-normal">
+                <span className="text-[10px] text-slate-300 hidden md:inline font-normal">
                   (Passe o cursor sobre os meses para inspecionar)
                 </span>
               </span>
@@ -421,7 +421,7 @@ export function HeroMockup3D() {
                       className={`text-[9px] font-mono transition-colors duration-150 ${
                         isActive
                           ? "text-[#00c878] font-bold scale-110"
-                          : "text-slate-400 group-hover:text-white"
+                          : "text-slate-300 group-hover:text-white"
                       }`}
                     >
                       {item.short}

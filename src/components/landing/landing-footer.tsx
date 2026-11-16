@@ -10,11 +10,11 @@ export function LandingFooter() {
           {/* Logo e Missão */}
           <div className="space-y-4">
             <EduFinanceLogo variant="full" size="md" />
-            <p className="text-slate-500 text-xs leading-relaxed">
+            <p className="text-slate-600 text-xs leading-relaxed">
               Plataforma especializada em inteligência financeira, automação de cobranças Asaas e gestão acadêmica 360° para cursinhos e escolas.
             </p>
-            <div className="flex items-center gap-2 text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 inline-flex">
-              <ShieldCheck className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-2 text-[11px] text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 inline-flex font-medium">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
               <span>Conexão Segura & Conformidade LGPD</span>
             </div>
           </div>
@@ -63,7 +63,7 @@ export function LandingFooter() {
             <h4 className="font-bold text-slate-900 uppercase tracking-wider text-xs mb-3">
               Módulos Ativos
             </h4>
-            <ul className="space-y-2 text-slate-500">
+            <ul className="space-y-2 text-slate-600 font-medium">
               <li>Régua de Cobrança PIX & Boleto</li>
               <li>Fila de Cobrança Preventiva (WhatsApp)</li>
               <li>Secretaria & Matrícula Ágil</li>
@@ -102,18 +102,18 @@ export function LandingFooter() {
         </div>
 
         {/* Rodapé Inferior */}
-        <div className="mt-12 pt-8 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400 text-[11px]">
+        <div className="mt-12 pt-8 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 text-[11px]">
           <p>
-            © {new Date().getFullYear()} <strong>Edu.Finance Tecnologia Educacional Ltda.</strong> CNPJ: 45.123.789/0001-90. Todos os direitos reservados.
+            © {new Date().getFullYear()} <strong className="text-slate-700">Edu.Finance Tecnologia Educacional Ltda.</strong> CNPJ: 45.123.789/0001-90. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/login" className="hover:text-slate-600 transition-colors">
+            <Link href="/login" className="hover:text-slate-900 transition-colors">
               Área do Cliente
             </Link>
-            <a href="#contato" className="hover:text-slate-600 transition-colors">
+            <a href="#contato" className="hover:text-slate-900 transition-colors">
               Privacidade
             </a>
-            <a href="#contato" className="hover:text-slate-600 transition-colors">
+            <a href="#contato" className="hover:text-slate-900 transition-colors">
               Termos de Uso
             </a>
           </div>
